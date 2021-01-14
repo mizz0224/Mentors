@@ -42,7 +42,12 @@ DJANGO_APPS = [
 # THIRD_PARTY_APPS = ["django_countries", "django_seed"]
 
 PROJECT_APPS = [
+    "core.apps.CoreConfig",
     "users.apps.UsersConfig",
+    "conversations.apps.ConversationsConfig",
+    "posts.apps.PostsConfig",
+    "reservations.apps.ReservationsConfig",
+    "reviews.apps.ReviewsConfig",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS
