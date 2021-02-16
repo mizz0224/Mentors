@@ -1,5 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.shortcuts import reverse
+from core import models as core_models
+from users import models as user_models
 
 # Create your models here.
 class User(AbstractUser):
@@ -12,9 +15,9 @@ class User(AbstractUser):
         (GENDER_FEMALE, "Female"),
         (GENDER_OTHER, "Other"),
     )
-    # image = models.ImageField(upload_to=) # 업로드 폴더 지정 후 사용할 예정
+    image = models.ImageField(upload_to="avatars", blank=True, null=True) # 업로드 폴더 지정 후 사용할 예정
     name = models.CharField(max_length=10, blank=True)
-    birthdate = models.DateField(auto_now=False, auto_now_add=True, blank=True) # 관리자 계정 생성후엔 auto_now_add=False로 바꿔줍시다
+    birthdate = models.DateField(auto_now=False, auto_now_add=False, blank=True, null=True) # 관리자 계정 생성후엔 auto_now_add=False로 바꿔줍시다
     gender = models.CharField(choices=GENDER_CHOICES, max_length=10, blank=True, default=GENDER_MALE)
     
     def __str__(self):
@@ -33,6 +36,19 @@ class Mentor(models.Model):
     def __str__(self):
         return self.user.name
     
+    def get_absolute_url(self):
+        return reverse("users:detail", kwargs={"pk": self.pk})
+    
+    def total_rating(self):
+        all_reviews = self.reviews.all()
+        all_ratings = 0
+        if len(all_reviews) > 0:
+            for review in all_reviews:
+                all_ratings += review.rating_average()
+            return round(all_ratings / len(all_reviews), 2)
+        return 0
+    
+    
 class MainBranch(models.Model):
     name = models.CharField(max_length=50)
     
@@ -45,3 +61,5 @@ class SubBranch(models.Model):
     
     def __str__(self):
         return self.name + "(" + self.main_branch.name + ")"
+    
+    
