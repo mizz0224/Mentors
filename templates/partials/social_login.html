@@ -1,0 +1,21 @@
+{% load socialaccount %} 
+
+<div>
+    <a href="{% provider_login_url 'github' %}"> 
+        Continue with Github<br>
+    </a>
+    <a href="{% provider_login_url 'kakao' method='oauth2' %}">
+        Continue with Kakao<br>
+    </a>
+    
+    <a href="{% provider_login_url 'google' %}">
+        Continue with Google<br>
+    </a>
+    <a href="{% provider_login_url 'facebook' %}">
+        Continue with Facebook<br>
+    </a>
+    <a href="{% provider_login_url 'naver' %}">
+        Continue with Naver
+    </a>
+
+</div>

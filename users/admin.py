@@ -2,13 +2,14 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from . import models
 
+
 @admin.register(models.User)
 class CustomUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
         (
             "계정 정보",
             {
-                "fields" : (
+                "fields": (
                     "name",
                     "birthdate",
                     "gender",
@@ -16,25 +17,23 @@ class CustomUserAdmin(UserAdmin):
             },
         ),
     )
-    
+
     list_display = (
         "name",
         "birthdate",
         "gender",
     )
-    
-    list_filter = (
-        "birthdate",
-        "gender",
-    )
-    
+
+    list_filter = ("birthdate", "gender", "is_staff")
+
+
 @admin.register(models.Mentor)
 class MentorAdmin(admin.ModelAdmin):
     fieldsets = (
         (
             "계정 정보",
             {
-                "fields" : (
+                "fields": (
                     "is_authorized",
                     "is_supermento",
                     "user",
@@ -44,7 +43,7 @@ class MentorAdmin(admin.ModelAdmin):
         (
             "멘토 정보",
             {
-                "fields" : (
+                "fields": (
                     "main_branch",
                     "sub_branch",
                     "company",
@@ -54,7 +53,7 @@ class MentorAdmin(admin.ModelAdmin):
             },
         ),
     )
-    
+
     list_display = (
         "__str__",
         "main_branch",
@@ -65,16 +64,15 @@ class MentorAdmin(admin.ModelAdmin):
         "is_authorized",
         "is_supermento",
     )
-    
-    list_filter = (
-        "is_authorized",
-        "is_supermento",
-    )
-    
+
+    list_filter = ("is_authorized", "is_supermento")
+
+
 @admin.register(models.MainBranch)
 class MainBranchAdmin(admin.ModelAdmin):
     pass
-    
+
+
 @admin.register(models.SubBranch)
 class SubBranchAdmin(admin.ModelAdmin):
     pass
