@@ -6,31 +6,19 @@ Home
 {% endblock page_title %}
 
 {% block content %}
+<div id="map" style="width:500px;height:400px;"></div>
+	<!-- <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=	21d002f9794143bd76e3fa58aab3af30"></script> -->
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=21d002f9794143bd76e3fa58aab3af30&libraries=services,clusterer,drawing"></script>
+	<script>
+		var container = document.getElementById('map');
+		var options = {
+			center: new kakao.maps.LatLng(33.450701, 126.570667),
+			level: 3
+		};
 
-{{now}}
+		var map = new kakao.maps.Map(container, options);
+	</script>
 
-{% for post in posts %}
-<h3>
-    <a href="{% url 'post:detail' post.pk %}">
-        {{post.title}} / ${{post.name}}
-        
-    </a>
-</h3>
-{% endfor %}
-
-<h5>
-    {% if page_obj.has_previous %}
-    <a href="?page={{page_obj.previous_page_number}}">Previous</a>
-    {% endif %}
-
-    Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}
-
-    {% if page_obj.has_next %}
-    <a href="?page={{page_obj.next_page_number}}">Next</a>
-    {% endif %}
-
-
-</h5>
 
 
 {% endblock content %}
