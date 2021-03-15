@@ -15,10 +15,17 @@ class User(AbstractUser):
         (GENDER_FEMALE, "Female"),
         (GENDER_OTHER, "Other"),
     )
+    LOGIN_EMAIL = "email"
+    LOGIN_GITHUB = "github"
+    LOGIN_KAKAO = "kakao"
+    
+    LOGIN_CHOICES = ((LOGIN_EMAIL, "Email"), (LOGIN_GITHUB, "Github"), (LOGIN_KAKAO, "Kakao"))
+    
     image = models.ImageField(upload_to="avatars", blank=True, null=True) # 업로드 폴더 지정 후 사용할 예정
     name = models.CharField(max_length=10, blank=True)
     birthdate = models.DateField(auto_now=False, auto_now_add=False, blank=True, null=True) # 관리자 계정 생성후엔 auto_now_add=False로 바꿔줍시다
     gender = models.CharField(choices=GENDER_CHOICES, max_length=10, blank=True, default=GENDER_MALE)
+    login_method = models.CharField(max_length=50, choices=LOGIN_CHOICES, default=LOGIN_EMAIL)
     
     def __str__(self):
         return self.name

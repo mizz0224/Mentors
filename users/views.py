@@ -27,7 +27,7 @@ class UserProfileView(DetailView):
     
 class UpdateProfileView(mixins.LoggedInOnlyView, SuccessMessageMixin, UpdateView):
     model = models.User
-    template_name = "users/update-profile.html"
+    template_name = "users/update_profile.html"
     fields = (
         "name",
         "birthdate",
@@ -48,7 +48,7 @@ class UpdateProfileView(mixins.LoggedInOnlyView, SuccessMessageMixin, UpdateView
 
 class UpdateMentorProfileView(mixins.LoggedInOnlyView, SuccessMessageMixin, UpdateView):
     model = models.Mentor
-    template_name = "users/update-Mentor-profile.html"
+    template_name = "users/update_Mentor_profile.html"
     fields = (
         "user",
         "main_branch",
@@ -80,7 +80,7 @@ class UpdateMentorProfileView(mixins.LoggedInOnlyView, SuccessMessageMixin, Upda
     
     
 class UpdatePasswordView(mixins.LoggedInOnlyView, mixins.EmailLoginOnlyView, SuccessMessageMixin, PasswordChangeView):
-    template_name = "users/update-password.html"
+    template_name = "users/update_password.html"
     success_message = "Password updated"
     
     def get_success_url(self):
@@ -92,6 +92,9 @@ class UpdatePasswordView(mixins.LoggedInOnlyView, mixins.EmailLoginOnlyView, Suc
         form.fields['new_password1'].widget.attrs ={'placeholder': "New password"}
         form.fields['new_password2'].widget.attrs ={'placeholder': "Confirmed new passowrd"}
         return form
+    
+class mentorsign():
+    pass
     
 def search(request):
     pass
