@@ -1,0 +1,13 @@
+{% extends "base.html" %} 
+{% block page_title %} {{Mentor.user.name}} {% endblock page_title %}
+{% block content %} 
+    {{Mentor.user.name}}
+    {{Mentor.user.birthdate}}
+    {{Mentor.user.gender}}
+    {{Mentor.main_branch}}
+    {{Mentor.sub_branch}}
+    {{Mentor.company}}
+    {{Mentor.department}}
+    {{Mentor.career}}
+    
+{% endblock content %}

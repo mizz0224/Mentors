@@ -22,6 +22,7 @@ class CustomUserAdmin(UserAdmin):
         "name",
         "birthdate",
         "gender",
+        "login_method"
     )
 
     list_filter = ("birthdate", "gender", "is_staff")

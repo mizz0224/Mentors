@@ -5,6 +5,9 @@ from django.core.mail import send_mail
 from django.utils.html import strip_tags
 from django.template.loader import render_to_string
 from django.conf import settings
+from django.shortcuts import reverse
+from core import models as core_models
+from users import models as user_models
 
 # Create your models here.
 class UserManager(BaseUserManager):
@@ -113,8 +116,20 @@ class Mentor(models.Model):
 
     def __str__(self):
         return self.user.name
-
-
+    
+    def get_absolute_url(self):
+        return reverse("users:detail", kwargs={"pk": self.pk})
+    
+    def total_rating(self):
+        all_reviews = self.reviews.all()
+        all_ratings = 0
+        if len(all_reviews) > 0:
+            for review in all_reviews:
+                all_ratings += review.rating_average()
+            return round(all_ratings / len(all_reviews), 2)
+        return 0
+    
+    
 class MainBranch(models.Model):
     name = models.CharField(max_length=50)
 
@@ -130,3 +145,5 @@ class SubBranch(models.Model):
 
     def __str__(self):
         return self.name + "(" + self.main_branch.name + ")"
+    
+    

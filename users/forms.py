@@ -2,7 +2,6 @@ from django import forms
 from allauth.socialaccount.forms import SignupForm
 from . import models
 
-
 class LoginForm(forms.Form):  # login form
 
     email = forms.EmailField()

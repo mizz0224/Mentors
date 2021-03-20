@@ -1,0 +1,9 @@
+{% extends "base.html" %} 
+{% block page_title %} Home {% endblock page_title %}
+{% block content %} 
+    {% for Mentor in Mentors %} 
+        <div class="flex flex-col">
+            {{Mentor.user.name}}
+        </div>
+    {% endfor %} 
+{% endblock content %}
