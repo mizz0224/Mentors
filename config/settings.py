@@ -49,8 +49,20 @@ PROJECT_APPS = [
     "reservations.apps.ReservationsConfig",
     "reviews.apps.ReviewsConfig",
 ]
+SOCIAL_LOGIN_APPS = [
+    "django.contrib.sites",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.facebook",
+    "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.naver",
+    "allauth.socialaccount.providers.kakao",
+    "allauth.socialaccount.providers.github",
+]
 
-INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
+
+INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS + SOCIAL_LOGIN_APPS
 
 
 MIDDLEWARE = [
@@ -76,6 +88,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "django.template.context_processors.request",
+                # `allauth` needs this from django
             ],
         },
     },
@@ -133,8 +147,91 @@ USE_TZ = True
 
 
 STATIC_URL = "/static/"
+
 AUTH_USER_MODEL = "users.User"
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static")
-]
+MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")
+
+MEDIA_URL = "/media/"
+
+
+# Email ConfigurationINTERNAL_IPS
+EMAIL_HOST = "smtp.mailgun.org"
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.environ.get("MAILGUN_USERNAME")
+EMAIL_HOST_PASSWORD = os.environ.get("MAILGUN_PASSWORD")
+EMAIL_FROM = "mentors@sandboxee6ba1decc8d4a8fbae7c30bbaf7eed9.mailgun.org"
+
+
+# django-allauth 부분
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = (
+    # 'allauth'와 관계없이 Django 관리자에서 사용자 이름으로 로그인 해야함.
+    "django.contrib.auth.backends.ModelBackend",
+    # e-mail로 로그인 하는 것과 같은 'allauth' 특정 인증 방법
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        },
+    },
+    "facebook": {
+        "METHOD": "oauth2",
+        "SDK_URL": "//connect.facebook.net/{locale}/sdk.js",
+        "SCOPE": ["email", "public_profile"],
+        "AUTH_PARAMS": {"auth_type": "reauthenticate"},
+        "INIT_PARAMS": {"cookie": True},
+        "FIELDS": [
+            "id",
+            "first_name",
+            "last_name",
+            "middle_name",
+            "name",
+            "name_format",
+            "picture",
+            "short_name",
+            "email",
+        ],
+        "EXCHANGE_TOKEN": True,
+        "LOCALE_FUNC": "path.to.callable",
+        "VERIFIED_EMAIL": False,
+        "VERSION": "v7.0",
+    },
+    "github": {
+        "SCOPE": [
+            "user",
+            "repo",
+            "read:org",
+        ],
+    },
+    "kakao": {
+        "APP": {
+            "client_id": os.environ.get("KAKAO_API_KEY"),
+            "secret": os.environ.get("KAKAO_ID"),
+            "key": "",
+        }
+    },
+}
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+LOGIN_REDIRECT_URL = "/"  # django-allauth 인증후 돌아갈 url
+SOCIALACCOUNT_AUTO_SIGNUP = False  # django-allauth 인증후 계정없을시 자동생성여부
+ACCOUNT_FORMS = {
+    "signup": "users.forms.SocialSignUpForm"
+}  # django-allauth 회원가입 form 설정, forms.py에서 SignupForm<-이거 상속안해주면 이중가입쳐리되므로 주의(대소문자구분)
+SOCIALACCOUNT_FORMS = {"signup": "users.forms.SocialSignUpForm"}  # 상동
+ACCOUNT_AUTHENTICATION_METHOD = "email"  # 계정 인증 방식(아마 로그인 방식인듯?)
+ACCOUNT_EMAIL_REQUIRED = True  # 계정에 email이 필수form이여야하는가? default = false
+ACCOUNT_UNIQUE_EMAIL = True  # unique email 즉 중복 이메일
+ACCOUNT_USERNAME_REQUIRED = (
+    False  # username 필요여부인데, 우리는 username 대신 name을 받아서 false로 지정
+)
+ACCOUNT_EMAIL_VERIFICATION = (
+    None  # django-allauth에서 제공하는 email 인증방식인듯? django-allauth 가 아닐수도 있을것같은데 이부분은 공부 필요
+)
