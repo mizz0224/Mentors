@@ -1,4 +1,5 @@
 import uuid
+from django.utils import timezone
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.core.mail import send_mail
@@ -8,6 +9,8 @@ from django.conf import settings
 from django.shortcuts import reverse
 from core import models as core_models
 from users import models as user_models
+from core import managers as core_managers
+from cal import Calendar
 
 # Create your models here.
 class UserManager(BaseUserManager):
@@ -29,6 +32,7 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, email, name, gender, birthdate, password):
         user = self.create_user(
+            username=email,
             email=email,
             name=name,
             gender=gender,
@@ -73,9 +77,8 @@ class User(AbstractUser):
     login_method = models.CharField(
         max_length=50, choices=LOGIN_CHOICES, default=LOGIN_EMAIL
     )
-
-    objects = UserManager()
-
+    # objects = UserManager()
+    # objects = core_managers.CustomModelManager()
     def verify_email(self):
         if self.email_verified is False:
             secret = uuid.uuid4().hex[:20]
@@ -113,7 +116,7 @@ class Mentor(models.Model):
     career = models.TextField()
     is_authorized = models.BooleanField(default=False)
     is_supermento = models.BooleanField(default=False)
-
+    objects = core_managers.CustomModelManager()
     def __str__(self):
         return self.user.name
     
@@ -123,12 +126,25 @@ class Mentor(models.Model):
     def total_rating(self):
         all_reviews = self.reviews.all()
         all_ratings = 0
+        cnt = 0
         if len(all_reviews) > 0:
             for review in all_reviews:
-                all_ratings += review.rating_average()
-            return round(all_ratings / len(all_reviews), 2)
+                if review.review != "삭제된 메시지입니다":
+                    all_ratings += review.rating_average()
+                    cnt += 1
+            return round(all_ratings / cnt, 2)
         return 0
     
+    def get_calendars(self):
+        now = timezone.now()
+        this_year = now.year
+        this_month = now.month
+        next_month = this_month + 1
+        if this_month == 12:
+            next_month = 1
+        this_month_cal = Calendar(this_year, this_month)
+        next_month_cal = Calendar(this_year, next_month)
+        return [this_month_cal, next_month_cal]
     
 class MainBranch(models.Model):
     name = models.CharField(max_length=50)

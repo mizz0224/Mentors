@@ -7,10 +7,10 @@ class ReviewAdmin(admin.ModelAdmin):
     list_display = (
         "menteename",
         "mentorname",
-        "scope",
-        "comment",
+        "score",
+        "review",
     )
     
     list_filter = (
-        "scope",
+        "score",
     )

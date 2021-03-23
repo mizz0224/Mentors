@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block page_title %}
+    Reservation {{reservatoin.check_in}}
+{% endblock page_title %}
+    
+{% block search-bar %}
+{% endblock search-bar %}
+
+{% block content %}
+
+<div>
+    {% for reservation in reservations %}
+    <div>
+        <p>상태 : {{reservation.status}}</p>
+        <p>멘티 : {{reservation.user.name}}</p>
+        <p>멘토 : {{reservation.mentor.user.name}}</p>
+        <p>기간 : {{reservation.check_in}} ~ {{reservation.check_out}}</p>
+        <a href="{% url 'reservations:detail' reservation.pk %}">this reservation</a>
+        <br>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock content %}

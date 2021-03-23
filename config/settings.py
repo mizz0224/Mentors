@@ -48,6 +48,7 @@ PROJECT_APPS = [
     "posts.apps.PostsConfig",
     "reservations.apps.ReservationsConfig",
     "reviews.apps.ReviewsConfig",
+    "wishlists.apps.WishlistsConfig",
 ]
 SOCIAL_LOGIN_APPS = [
     "django.contrib.sites",

@@ -4,6 +4,8 @@
     <h2> Welcome, {{user.name}} </h2>
     {% endif %}
     {% if user.is_authenticated %}
+    <li class="nav_link"><a href="{% url 'wishlists:see-favs' %}">Favs({{user.wishlist.mentors.count}})</a></li>
+    <li class="nav_link"><a href="{% url 'reservations:list' %}">reservation_list({{user.reservations.count}})</a></li>
         <li><a href="{% url "users:logout" %}">Log out</a></li>
     {% else %}
         <li><a href="{% url "users:login" %}">Log in</a></li>

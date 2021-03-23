@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block page_title %}
+    {{user.name}}'s Profile
+{% endblock page_title %}
+
+
+{% block content %}
+    <div class="min-h-75vh">
+
+        <h3 class="mb-12 text-2xl text-center">Your Favorites</h3>
+            <div class="container mx-auto pb-10">
+                <div class="flex flex-wrap -mx-40 mb-10"> 
+                    {% for mentor in user.wishlist.mentors.all %}
+                        {% comment %} {% include 'mixins/mentor_card.html' with mentor=mentor.user %} {% endcomment %}
+                        {{mentor.user.name}}
+                    {% endfor %}
+                </div>
+            </div>
+    </div>
+{% endblock content %}
+

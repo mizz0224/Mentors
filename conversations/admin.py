@@ -7,6 +7,7 @@ class ConversationAdmin(admin.ModelAdmin):
     list_display = (
         "user",
         "mentor",
+        
     )
     
     list_filter = (
@@ -17,8 +18,9 @@ class ConversationAdmin(admin.ModelAdmin):
 class MessageAdmin(admin.ModelAdmin):
     list_display = (
         "conversation",
-        "content",
+        "message",
         "user",
+        "created",
     )
     
     list_filter = (

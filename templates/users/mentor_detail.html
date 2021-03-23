@@ -1,4 +1,6 @@
 {% extends "base.html" %} 
+{% load is_booked on_favs i18n %}
+
 {% block page_title %} {{Mentor.name}} {% endblock page_title %}
 {% block content %} 
         {{Mentor.user.name}}
@@ -7,4 +9,81 @@
         {{Mentor.company}}
         {{Mentor.department}}
         {{Mentor.career}}
+        <div class="mt-10">
+                <h4 class="font-medium text-2xl mb-5">Reviews</h4>
+                
+                <div class="flex items-center">
+                    <div>
+                        <i class="fas fa-star text-teal-500"></i>
+                        <span class="font-bold text-xl">{{Mentor.total_rating}}</span>
+                    </div>
+                    <div class="h-5 w-px bg-gray-400 mx-5"></div>
+                    <div>
+                        <span class="font-bold text-xl">{{Mentor.reviews.count}}</span>
+                        <span>review{{Mentor.reviews.count|pluralize}}</span>
+                    </div>
+                </div>
+                {% on_favs Mentor as on_favs_boolean %}
+                    {% if on_favs_boolean %}
+                        <a class="block mb-10 w-1/3 text-teal-600 font-bold" href="{% url 'wishlists:toggle-mentor' Mentor.pk %}?action=remove">Remove from Favorite</a>
+                    {% else %}
+                        <a class="block mb-10 w-1/3 text-teal-600 font-bold" href="{% url 'wishlists:toggle-mentor' Mentor.pk %}?action=add">Save to Favorite</a>
+                    {% endif %}
+                <div class="mt-10">
+                    {% for review in Mentor.reviews.all %}
+                    <br>
+                        <div class=border-section>
+                            <div class="mb-3 flex">
+                                <div>
+                                    {% include "mixins/user_avatar.html" with user=review.user h_and_w='w-10 h-10' text='text-xl' %}
+                                </div>
+                                <div class="flex flex-col ml-5">  
+                                    <span>{{review.user.name}}</span>
+                                    <span>{{review.created|date:"F Y"}}</span>
+                                    {% if review.review != "삭제된 메시지입니다" %}
+                                    <span>{{review.score}}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if review.review == "삭제된 메시지입니다" %}
+                            <p><del>{{review.review}}</del><p>
+                            {% else %}
+                            <p>{{review.review}}</p>
+                            <a href="{% url 'reviews:update' pk=review.pk %}">update review</a>
+                            <a href="{% url 'reviews:remove' pk=review.pk %}">remove review</a>
+                            {% endif %}
+                        </div>
+                    <br>
+                    {% endfor %}
+                </div>
+            </div>
+        {% if not request.session.is_hosting %}
+                {% for calendar in Mentor.get_calendars %}
+                        <div class="mb-20">
+                            
+                            <span class="text-center font-semibold text-lg block mb-8">{{calendar.get_month}} / {{calendar.year}}</span>
+                            <div class="cal-grid font-medium mb-4">
+                                {% for day in calendar.day_names %}
+                                    <span>{{day}}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="cal-grid">
+                                {% for day in calendar.get_days %}
+                                    {% is_booked Mentor day as is_booked_bool %}
+                                    {% if day.number != 0 %}
+                                        {% if day.past %}
+                                            <span class="rounded bg-gray-200 w-full text-center p-1 text-gray-300">{{day}}</span>
+                                        {% elif is_booked_bool %}
+                                            <span class="rounded bg-gray-200 w-full text-center p-1 text-gray-300 line-through">{{day}}</span>
+                                        {% else %}
+                                            <a href="{% url 'reservations:create' Mentor.pk day.year day.month day.number %}"class="bg-gray-200 w-full text-center rounded text-gray-700 p-1 hover:bg-teal-400 hover:font-medium hover:text-white cursor-pointer">{{day}}</a>
+                                        {% endif %}
+                                    {% else %}
+                                        <span></span>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                {% endfor %}
+        {% endif %}
 {% endblock content %}
