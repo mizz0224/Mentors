@@ -1,23 +1,27 @@
-{% extends "base.html" %}
+{% extends "socialaccount/base.html" %}
 
-{% block page_title %}
-    Sign Up
-{% endblock page_title %}
+{% load i18n %}
 
-{% block search-bar %}
-{% endblock search-bar %}
+{% block head_title %}{% trans "Signup" %}{% endblock %}
 
 {% block content %}
+    <h1>{% trans "Sign Up" %}</h1>
 
-    {% include 'partials/social_login.html' %}
-    <form method="POST" action="{% url "users:signup" %}"> 
-        {% csrf_token %}
-        {{form.as_p}}
-        <button id="Sign_up" type="submit"><i class="fa fa-search">회원가입</i></button>
-    </form>
-    <button id="sms_verfy" type="submit" onclick="sms_verfy()"><i class="fa fa-search">SMS로 전화번호 인증하기</i></button> 
-    <button id="sms_check" type="submit" onclick="sms_check()"><i class="fa fa-search">인증번호 확인</i></button>
-    <label id ="5mintimer"> </label> 
+<p>{% blocktrans with provider_name=account.get_provider.name site_name=site.name %}You are about to use your {{provider_name}} account to login to
+{{site_name}}. As a final step, please complete the following form:{% endblocktrans %}</p>
+
+<form class="signup" id="signup_form" method="post" action="{% url 'socialaccount_signup' %}">
+  {% csrf_token %}
+  {{ form.as_p }}
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  {% endif %}
+  <button id="Sign_up" type="submit">{% trans "Sign Up" %} &raquo;</button>
+</form>
+
+<button id="sms_verfy" type="submit" onclick="sms_verfy()"><i class="fa fa-search">SMS로 전화번호 인증하기</i></button> 
+<button id="sms_check" type="submit" onclick="sms_check()"><i class="fa fa-search">인증번호 확인</i></button>
+<label id ="5mintimer"> </label> 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script type="text/javascript">
         var auth_number //인증확인용 1000~9999의 4자리수 값 생성(전화번호 입력하고 sms_verfy 버튼눌러야만 인증번호 전송후 생성)
@@ -36,7 +40,7 @@
             if(phone_number>1000000000){ //만약 전화번호를 Int로 변화하면 01012345678 -> 1012345678 로 변하기때문에 010으로 시작하는 총 11자리수가 맞는지 검출(만약 맨앞자리가 010이아니라 100이나 020으로 시작하면 노답...)
                 $.ajax({
                     type: "POST", // 데이터를 전송하는 방법
-                    url: 'sms_verfy/',//user의 urls.py 참조
+                    url: 'http://localhost:8000/users/sms_verfy/',//user의 urls.py 참조
                     data : {'phone_number':phone_number,'csrfmiddlewaretoken': '{{ csrf_token }}'}, //users/views.py의 ajax_sms_verfy function에 전화번호와 csrf인증을 전달함
                     success:function(response){ //성공적으로 ajax_sms_verfy function과 통신에 성공했다면,
                         alert("문자를 발송했습니다.") //이렇게 알림 띄워주고
@@ -57,10 +61,11 @@
             }
         }
         function sms_check(){
+            
             let get_auth_number = $('#id_auth_number').val() //유저가 입력한 SMS 인증번호
             $.ajax({
                 type: "POST", // 데이터를 전송하는 방법
-                url: 'sms_check/', // users의 url.py 참조,users/views.py의 ajax_sms_check funcfion과 통신
+                url: 'http://localhost:8000/users/sms_check/', // users의 url.py 참조,users/views.py의 ajax_sms_check funcfion과 통신
                 data : {'get_auth_number':get_auth_number,'auth_number':auth_number,'csrfmiddlewaretoken': '{{ csrf_token }}'}, //get_auth_number은 user가 입력한 인증번호, auth_number은 문자인증후 상단의 sms_verfy가 리턴한 인증번호,
                 success:function(response){
                     if(response.result=="성공"){ //ajax_sms_check 에서 get_auth_number값이 일치하면 "성공",불일치하면 "실패"인데 이거 자바스크립트로 짜도되는데... 아니면 리턴값을 Bool로 주거나... ajax연습했다고 생각하자
@@ -78,7 +83,7 @@
                     }
                 },
                 error:function(){ //혹시 ajax실패했을까봐... ㅋㅋ 다시말하지만 javascript로 하면 이럴일이없다.
-                    alert("문자 확인에 실패하였습니다....에러체크 필요") 
+                    alert("에러체크 필요") 
                     fail_sms_verfy()
                 }
                 
@@ -120,8 +125,9 @@
             clearInterval(fivemintimer_interval);
             document.getElementById('5mintimer').innerHTML = ""; 
             timeleft = 300;
+            
         }
             
         
     </script>
-{% endblock content %}
+{% endblock %}

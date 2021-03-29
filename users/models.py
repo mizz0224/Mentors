@@ -14,7 +14,7 @@ from cal import Calendar
 
 # Create your models here.
 class UserManager(BaseUserManager):
-    def create_user(self, email, name, gender, birthdate, password=None):
+    def create_user(self, email, name, gender, birthdate, phone_number, password=None):
         if not email:
             raise ValueError("Users must have an email address")
 
@@ -24,6 +24,7 @@ class UserManager(BaseUserManager):
             name=name,
             gender=gender,
             birthdate=birthdate,
+            phone_number=phone_number,
         )
 
         user.set_password(password)
@@ -77,6 +78,10 @@ class User(AbstractUser):
     login_method = models.CharField(
         max_length=50, choices=LOGIN_CHOICES, default=LOGIN_EMAIL
     )
+    phone_number = models.CharField(
+        verbose_name="휴대폰 번호",
+        max_length=11,
+    )
     # objects = UserManager()
     # objects = core_managers.CustomModelManager()
     def verify_email(self):
@@ -117,12 +122,13 @@ class Mentor(models.Model):
     is_authorized = models.BooleanField(default=False)
     is_supermento = models.BooleanField(default=False)
     objects = core_managers.CustomModelManager()
+
     def __str__(self):
         return self.user.name
-    
+
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"pk": self.pk})
-    
+
     def total_rating(self):
         all_reviews = self.reviews.all()
         all_ratings = 0
@@ -134,7 +140,7 @@ class Mentor(models.Model):
                     cnt += 1
             return round(all_ratings / cnt, 2)
         return 0
-    
+
     def get_calendars(self):
         now = timezone.now()
         this_year = now.year
@@ -145,7 +151,8 @@ class Mentor(models.Model):
         this_month_cal = Calendar(this_year, this_month)
         next_month_cal = Calendar(this_year, next_month)
         return [this_month_cal, next_month_cal]
-    
+
+
 class MainBranch(models.Model):
     name = models.CharField(max_length=50)
 
@@ -161,5 +168,3 @@ class SubBranch(models.Model):
 
     def __str__(self):
         return self.name + "(" + self.main_branch.name + ")"
-    
-    

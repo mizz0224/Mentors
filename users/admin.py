@@ -8,22 +8,11 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
         (
             "계정 정보",
-            {
-                "fields": (
-                    "name",
-                    "birthdate",
-                    "gender",
-                )
-            },
+            {"fields": ("name", "birthdate", "gender", "phone_number")},
         ),
     )
 
-    list_display = (
-        "name",
-        "birthdate",
-        "gender",
-        "login_method"
-    )
+    list_display = ("name", "birthdate", "gender", "login_method")
 
     list_filter = ("birthdate", "gender", "is_staff")
 
