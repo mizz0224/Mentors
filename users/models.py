@@ -162,4 +162,27 @@ class SubBranch(models.Model):
     def __str__(self):
         return self.name + "(" + self.main_branch.name + ")"
     
-    
+class Point(models.Model):
+    """ List Model Definition """
+
+    STATE_USE = "Use"
+    STATE_PENDING = "Pending"
+    STATE_CANCLED = "Cancled"
+    STATE_ACCRUAL = "Accrual"
+    STATE_WITHDRAW = "Withdraw"
+    STATEMENT_SET = (
+        (STATE_USE, "사용"),
+        (STATE_PENDING, "보류중"),
+        (STATE_CANCLED, "취소"),
+        (STATE_ACCRUAL, "적립"),
+        (STATE_WITHDRAW, "인출"),
+    )
+    product_name = models.CharField(max_length=40)
+    time_paid = models.DateTimeField()
+    time_refund = models.DateTimeField()
+    state = models.CharField(choices=STATEMENT_SET, max_length=40)
+    value_paid = models.IntegerField(default=0)
+    value_refund = models.IntegerField(default=0)
+    user = models.ForeignKey(
+        "users.User", related_name="Point_Record", on_delete=models.CASCADE
+    )

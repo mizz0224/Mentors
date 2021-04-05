@@ -181,3 +181,8 @@ class mentorsign():
     
 def search(request):
     pass
+
+class UserPointView(DetailView):
+    
+    model = models.Point
+    context_object_name = "points"
