@@ -77,3 +77,7 @@ class MainBranchAdmin(admin.ModelAdmin):
 @admin.register(models.SubBranch)
 class SubBranchAdmin(admin.ModelAdmin):
     pass
+
+@admin.register(models.Point)
+class UserPointAdmin(admin.ModelAdmin):
+    pass

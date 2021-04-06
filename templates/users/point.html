@@ -1,7 +1,12 @@
 {% extends "base.html" %} 
-{% block page_title %} {{users.name}} {% endblock page_title %}
+{% block page_title %} {{request.user.name}} {% endblock page_title %}
 {% block content %} 
-    {{users.name}}
-    {{users.birthdate}}
-    {{users.gender}}
+    
+    {% for point in request.user.Point_Record.all %}
+        {{point.state}}
+        {{point.product_name}}
+        {{point.time_paid}}
+        {{value.paid}}
+    {% endfor %}
+        
 {% endblock content %}

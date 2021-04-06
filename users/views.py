@@ -2,7 +2,7 @@ import os
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import PasswordChangeView
-from django.views.generic import FormView, DetailView, UpdateView, ListView, View
+from django.views.generic import FormView, DetailView, UpdateView, ListView, View, TemplateView
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect, reverse
 from django.core.paginator import Paginator
@@ -182,7 +182,5 @@ class mentorsign():
 def search(request):
     pass
 
-class UserPointView(DetailView):
-    
-    model = models.Point
-    context_object_name = "points"
+class UserPointView(TemplateView):
+    template_name = "users/point.html"
