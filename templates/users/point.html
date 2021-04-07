@@ -1,12 +1,35 @@
 {% extends "base.html" %} 
 {% block page_title %} {{request.user.name}} {% endblock page_title %}
 {% block content %} 
+<style>
+    table {
+      width: 100%;
+      border: 1px solid #444444;
+      border-collapse: collapse;
+      table-layout : fixed;
+    }
+    th, td {
+        border: 1px solid #444444;
+      }
+  </style>
+  {{user}}님의 포인트 현황입니다
+  <br>현재포인트는 {{user.point}}점이며 사용내역은 다음과 같습니다.<br>
+  <table>
+    <td>상태</td>
+    <td>제품명</td>
+    <td>일자</td>
+    <td>금액</td>
+    <td>총액</td>
+</table>
+    {% for Point in request.user.Point_Record.all %}
+    <table>
+        <td>{{Point.state}}</td>
+        <td>{{Point.product_name}}</td>
+        <td>{{Point.date}}</td>
+        <td>{{Point.value}}</td>
+        <td>{{Point.now_user_point}}</td>
+    </table>    
     
-    {% for point in request.user.Point_Record.all %}
-        {{point.state}}
-        {{point.product_name}}
-        {{point.time_paid}}
-        {{value.paid}}
     {% endfor %}
         
 {% endblock content %}

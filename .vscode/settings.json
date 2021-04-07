@@ -1,5 +1,5 @@
 {
-    "editor.formatOnSave": false,
+    "editor.formatOnSave": true,
     "python.pythonPath": "C:\\Users\\wosud\\AppData\\Local\\Programs\\Python\\Python37\\python.exe",
     "python.linting.flake8Enabled": true,
     "python.linting.pylintEnabled": false,

@@ -77,6 +77,7 @@ class User(AbstractUser):
     login_method = models.CharField(
         max_length=50, choices=LOGIN_CHOICES, default=LOGIN_EMAIL
     )
+    point = models.IntegerField(default=0)
     # objects = UserManager()
     # objects = core_managers.CustomModelManager()
     def verify_email(self):
@@ -117,12 +118,13 @@ class Mentor(models.Model):
     is_authorized = models.BooleanField(default=False)
     is_supermento = models.BooleanField(default=False)
     objects = core_managers.CustomModelManager()
+
     def __str__(self):
         return self.user.name
-    
+
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"pk": self.pk})
-    
+
     def total_rating(self):
         all_reviews = self.reviews.all()
         all_ratings = 0
@@ -134,7 +136,7 @@ class Mentor(models.Model):
                     cnt += 1
             return round(all_ratings / cnt, 2)
         return 0
-    
+
     def get_calendars(self):
         now = timezone.now()
         this_year = now.year
@@ -145,7 +147,8 @@ class Mentor(models.Model):
         this_month_cal = Calendar(this_year, this_month)
         next_month_cal = Calendar(this_year, next_month)
         return [this_month_cal, next_month_cal]
-    
+
+
 class MainBranch(models.Model):
     name = models.CharField(max_length=50)
 
@@ -161,15 +164,16 @@ class SubBranch(models.Model):
 
     def __str__(self):
         return self.name + "(" + self.main_branch.name + ")"
-    
+
+
 class Point(models.Model):
     """ List Model Definition """
 
-    STATE_USE = "Use"
-    STATE_PENDING = "Pending"
-    STATE_CANCLED = "Cancled"
-    STATE_ACCRUAL = "Accrual"
-    STATE_WITHDRAW = "Withdraw"
+    STATE_USE = "사용"
+    STATE_PENDING = "보류중"
+    STATE_CANCLED = "취소"
+    STATE_ACCRUAL = "적립"
+    STATE_WITHDRAW = "인출"
     STATEMENT_SET = (
         (STATE_USE, "사용"),
         (STATE_PENDING, "보류중"),
@@ -177,12 +181,17 @@ class Point(models.Model):
         (STATE_ACCRUAL, "적립"),
         (STATE_WITHDRAW, "인출"),
     )
-    product_name = models.CharField(max_length=40)
-    time_paid = models.DateTimeField()
-    time_refund = models.DateTimeField()
     state = models.CharField(choices=STATEMENT_SET, max_length=40)
-    value_paid = models.IntegerField(default=0)
-    value_refund = models.IntegerField(default=0)
+    product_name = models.CharField(max_length=40)
+    date = models.DateTimeField()
+    value = models.IntegerField(default=0)
     user = models.ForeignKey(
         "users.User", related_name="Point_Record", on_delete=models.CASCADE
+    )
+    now_user_point = models.ForeignKey(
+        "users.User",
+        related_name="Point_Record_now_point",
+        on_delete=models.CASCADE,
+        db_column="point",
+        default=0,
     )

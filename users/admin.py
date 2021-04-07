@@ -13,17 +13,13 @@ class CustomUserAdmin(UserAdmin):
                     "name",
                     "birthdate",
                     "gender",
+                    "point",
                 )
             },
         ),
     )
 
-    list_display = (
-        "name",
-        "birthdate",
-        "gender",
-        "login_method"
-    )
+    list_display = ("name", "birthdate", "gender", "login_method")
 
     list_filter = ("birthdate", "gender", "is_staff")
 
@@ -38,6 +34,7 @@ class MentorAdmin(admin.ModelAdmin):
                     "is_authorized",
                     "is_supermento",
                     "user",
+                    "point",
                 )
             },
         ),
@@ -77,6 +74,7 @@ class MainBranchAdmin(admin.ModelAdmin):
 @admin.register(models.SubBranch)
 class SubBranchAdmin(admin.ModelAdmin):
     pass
+
 
 @admin.register(models.Point)
 class UserPointAdmin(admin.ModelAdmin):
