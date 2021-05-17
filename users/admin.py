@@ -8,7 +8,14 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
         (
             "계정 정보",
-            {"fields": ("name", "birthdate", "gender", "phone_number")},
+            {
+                "fields": (
+                    "name",
+                    "birthdate",
+                    "gender",
+                    "point",
+                )
+            },
         ),
     )
 
@@ -27,6 +34,7 @@ class MentorAdmin(admin.ModelAdmin):
                     "is_authorized",
                     "is_supermento",
                     "user",
+                    "point",
                 )
             },
         ),
@@ -65,4 +73,9 @@ class MainBranchAdmin(admin.ModelAdmin):
 
 @admin.register(models.SubBranch)
 class SubBranchAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(models.Point)
+class UserPointAdmin(admin.ModelAdmin):
     pass

@@ -25,6 +25,13 @@ urlpatterns = [
         views.UpdateMentorProfileView.as_view(),
         name="mentor-update",
     ),
+    path("point/", views.UserPointView.as_view(), name="point"),
+    path("point/add/", views.ajax_buy_point, name="buy_point"),
+    path(
+        "update-mentor-profile/",
+        views.UpdateMentorProfileView.as_view(),
+        name="mentor-update",
+    ),
     path("update-profile/", views.UpdateProfileView.as_view(), name="update"),
     path("update-password/", views.UpdatePasswordView.as_view(), name="password"),
     path(

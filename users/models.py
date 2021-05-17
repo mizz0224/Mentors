@@ -25,6 +25,7 @@ class UserManager(BaseUserManager):
             gender=gender,
             birthdate=birthdate,
             phone_number=phone_number,
+            point=0,
         )
 
         user.set_password(password)
@@ -38,6 +39,7 @@ class UserManager(BaseUserManager):
             name=name,
             gender=gender,
             birthdate=birthdate,
+            point=0,
         )
         user.is_admin = True
         user.save(using=self._db)
@@ -82,8 +84,10 @@ class User(AbstractUser):
         verbose_name="휴대폰 번호",
         max_length=11,
     )
+    point = models.IntegerField(default=0)
     # objects = UserManager()
     # objects = core_managers.CustomModelManager()
+
     def verify_email(self):
         if self.email_verified is False:
             secret = uuid.uuid4().hex[:20]
@@ -168,3 +172,27 @@ class SubBranch(models.Model):
 
     def __str__(self):
         return self.name + "(" + self.main_branch.name + ")"
+
+
+class Point(models.Model):
+    """ List Model Definition """
+
+    STATE_USE = "사용"
+    STATE_PENDING = "보류중"
+    STATE_CANCLED = "취소"
+    STATE_ACCRUAL = "적립"
+    STATE_WITHDRAW = "인출"
+    STATEMENT_SET = (
+        (STATE_USE, "사용"),
+        (STATE_PENDING, "보류중"),
+        (STATE_CANCLED, "취소"),
+        (STATE_ACCRUAL, "적립"),
+        (STATE_WITHDRAW, "인출"),
+    )
+    state = models.CharField(choices=STATEMENT_SET, max_length=40)
+    product_name = models.CharField(max_length=40)
+    date = models.DateTimeField()
+    value = models.IntegerField(default=0)
+    user = models.ForeignKey(
+        "users.User", related_name="Point_Record", on_delete=models.CASCADE
+    )

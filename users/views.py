@@ -4,13 +4,21 @@ from django.http import HttpResponse, JsonResponse
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import PasswordChangeView
-from django.views.generic import FormView, DetailView, UpdateView, ListView, View
+from django.views.generic import (
+    FormView,
+    DetailView,
+    UpdateView,
+    ListView,
+    View,
+    TemplateView,
+)
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect, reverse
 from django.core.paginator import Paginator
 from django.contrib.messages.views import SuccessMessageMixin
 from . import models, forms, mixins
 from django.views.decorators.csrf import csrf_exempt
+from django.utils import timezone
 
 # 이메일로 로그인
 def send_sms(phone_number, text_to_content):
@@ -260,9 +268,33 @@ def ajax_sms_check(request):
     return HttpResponse(json.dumps(context), content_type="application/json")
 
 
+@csrf_exempt
+def ajax_buy_point(request):
+    user = request.user
+    merchant_value = request.POST.get("merchant_value")
+    merchant_name = request.POST.get("merchant_name")
+    point = models.Point(
+        state=models.Point.STATE_ACCRUAL,
+        product_name=merchant_name,
+        value=merchant_value,
+        user=user,
+        date=timezone.now(),
+    )
+    point.save()
+    user_model = models.User.objects.get(pk=request.POST.get("user_pk"))
+    user_model.point += int(merchant_value)
+    user_model.save()
+    context = "done"
+    return HttpResponse(json.dumps(context), content_type="application/json")
+
+
 class mentorsign:
     pass
 
 
 def search(request):
     pass
+
+
+class UserPointView(TemplateView):
+    template_name = "users/point.html"
