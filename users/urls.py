@@ -44,4 +44,7 @@ urlpatterns = [
         views.ajax_sms_check,
         name="sms_check",
     ),
+    path("search_mentor", views.search_mentor, name="search_mentor"),
+    path("Mentorsignup/", views.MentorSignUpView.as_view(), name="Mentorsignup"),
+    path("Mentorsignup/kakaomap", views.renderkakaomap),
 ]

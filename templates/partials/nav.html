@@ -4,8 +4,15 @@
     <h2> Welcome, {{user.name}} </h2>
     {% endif %}
     {% if user.is_authenticated %}
-    <li class="nav_link"><a href="{% url 'wishlists:see-favs' %}">Favs({{user.wishlist.mentors.count}})</a></li>
-    <li class="nav_link"><a href="{% url 'reservations:list' %}">reservation_list({{user.reservations.count}})</a></li>
+        {% if user.is_mentor%}
+            <h2>hi menor!</h2>
+        {%else%}
+            <li><a href="{% url "users:Mentorsignup" %}">Mentor Sign up</a></li>
+        {%endif%}
+
+        <li class="nav_link"><a href="{% url 'wishlists:see-favs' %}">Favs({{user.wishlist.mentors.count}})</a></li>
+        <li class="nav_link"><a href="{% url 'reservations:list' %}">reservation_list({{user.reservations.count}})</a></li>
+        <li class="nav_link"><a href="{% url 'users:point' %}">My Point</a></li>
         <li><a href="{% url "users:logout" %}">Log out</a></li>
     {% else %}
         <li><a href="{% url "users:login" %}">Log in</a></li>

@@ -288,13 +288,48 @@ def ajax_buy_point(request):
     return HttpResponse(json.dumps(context), content_type="application/json")
 
 
-class mentorsign:
-    pass
-
-
-def search(request):
-    pass
-
-
 class UserPointView(TemplateView):
     template_name = "users/point.html"
+
+
+def search_mentor(request):
+    # get_name = request.GET.get("name")
+    get_name = request.POST.get("name")
+    # 안에 변수는 짧게하는게 좋음
+    obj = models.Mentor.objects.filter(user__name__icontains=get_name)  # 포함관계설정
+    # obj = models.Mentor.objects.all()
+    # return redirect(reverse())
+    if get_name:
+        return render(
+            request, "posts/post_list.html", {"mentors": obj, "get_name": get_name}
+        )
+    else:
+        return render(request, "posts/post_list.html")
+    # pass
+
+
+class MentorSignUpView(FormView):
+    template_name = "users/Mentorsignup.html"
+    form_class = forms.MentorsignupForm
+    success_url = reverse_lazy("core:home")
+
+    def form_valid(self, form):
+        mentor = models.Mentor.objects.create(
+            user=self.request.user,
+            main_branch=form.cleaned_data.get("main_branch"),
+            sub_branch=form.cleaned_data.get("sub_branch"),
+            company=form.cleaned_data.get("company"),
+            department=form.cleaned_data.get("department"),
+            career=form.cleaned_data.get("career"),
+            address=form.cleaned_data.get("address"),
+            address_name=form.cleaned_data.get("address_name"),
+        )
+        form.save()
+        user_model = models.User.objects.get(id=self.request.user.id)
+        user_model.is_mentor = True
+        user_model.save()
+        return super().form_valid(form)
+
+
+def renderkakaomap(request):
+    return render(request, "users/kakaomap.html")

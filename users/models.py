@@ -26,6 +26,7 @@ class UserManager(BaseUserManager):
             birthdate=birthdate,
             phone_number=phone_number,
             point=0,
+            is_mentor=False,
         )
 
         user.set_password(password)
@@ -84,6 +85,7 @@ class User(AbstractUser):
         verbose_name="휴대폰 번호",
         max_length=11,
     )
+    is_mentor = models.BooleanField(default=False)
     point = models.IntegerField(default=0)
     # objects = UserManager()
     # objects = core_managers.CustomModelManager()
@@ -126,6 +128,8 @@ class Mentor(models.Model):
     is_authorized = models.BooleanField(default=False)
     is_supermento = models.BooleanField(default=False)
     objects = core_managers.CustomModelManager()
+    address = models.CharField(max_length=256)
+    address_name = models.CharField(max_length=256)
 
     def __str__(self):
         return self.user.name

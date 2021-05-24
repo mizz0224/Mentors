@@ -6,19 +6,11 @@ Home
 {% endblock page_title %}
 
 {% block content %}
-<div id="map" style="width:500px;height:400px;"></div>
-	<!-- <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=	21d002f9794143bd76e3fa58aab3af30"></script> -->
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=21d002f9794143bd76e3fa58aab3af30&libraries=services,clusterer,drawing"></script>
-	<script>
-		var container = document.getElementById('map');
-		var options = {
-			center: new kakao.maps.LatLng(33.450701, 126.570667),
-			level: 3
-		};
-
-		var map = new kakao.maps.Map(container, options);
-	</script>
-
-
-
+{% if not mentors %}
+<h1>검색 결과가 없습니다</h1>
+{%else%}
+{% for Mentor in mentors %}
+    <h3>{{Mentor.user.name}}</h3>
+{% endfor %}
+{%endif%}
 {% endblock content %}

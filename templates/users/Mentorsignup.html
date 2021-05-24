@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block page_title %}
+Sign Up
+{% endblock page_title %}
+
+{% block search-bar %}
+{% endblock search-bar %}
+
+{% block content %}
+<form method="POST" action="{% url "users:Mentorsignup" %}">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button id = "mentor_sign_up" type="submit">Mentor Sign up</button>
+    
+</form>
+<button id="openkakaomap" onclick="popup();">지도열어서 주소입력하기</button>
+{% csrf_token %}
+<script>
+    var address = document.getElementById('id_address')
+    var address_name = document.getElementById('id_address_name')
+    var btn_submit = document.getElementById("mentor_sign_up")
+    
+    document.getElementById('address').readOnly = true;
+    document.getElementById('address_name').readOnly = true;
+    function popup() {
+        var url = "http://localhost:8000/users/Mentorsignup/kakaomap";
+        var name = "Mentors 주소 입력창";
+        var option = "width = 500, height = 500, top = 100, left = 200, location = no"
+        window.open(url, name, option);
+        return false;
+    }
+    function button_check(){
+        return false;
+    }
+</script>
+
+{% endblock content %}

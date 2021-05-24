@@ -67,6 +67,7 @@ class SignUpForm(forms.ModelForm):  # 일반 signup form , forms.modelform 상�
         email = self.cleaned_data.get("email")
         password = self.cleaned_data.get("password")
         user.username = email
+        user.is_mentor = False
         user.set_password(password)
         user.save()
 
@@ -98,6 +99,49 @@ class SocialSignUpForm(
         user.gender = self.cleaned_data["gender"]
         user.birthdate = self.cleaned_data["birthdate"]
         user.phone_number = self.cleaned_data["phone_number"]
+        user.is_mentor = False
         # user.verify_email()
         user.save()
         return user
+
+
+class MentorsignupForm(forms.ModelForm):
+    class Meta:
+        model = models.Mentor
+        fields = [
+            "main_branch",
+            "sub_branch",
+            "company",
+            "department",
+            "career",
+            "address",
+            "address_name",
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["address"].widget.attrs["readonly"] = True
+        self.fields["address_name"].widget.attrs["readonly"] = True
+        self.fields["address"].widget.attrs[
+            "placeholder"
+        ] = "상단의 지도열어서 주소입력하기 버튼을 통해 입력하여 주십시오"
+        self.fields["address_name"].widget.attrs[
+            "placeholder"
+        ] = "상단의 지도열어서 주소입력하기 버튼을 통해 입력하여 주십시오"
+        self.fields["address"].widget.attrs["readonly"] = True
+        self.fields["address_name"].widget.attrs["readonly"] = True
+        # self.fields["address"].widget.error_messages = {""}
+        # self.fields["address_name"].widget.attrs["readonly"] = True
+
+    # def clean_user(self):
+    #     email = self.request.user.objects.get("email")
+    #     try:
+    #         useremaiil = models.User.objects.get(email=email)
+    #         raise forms.ValidationError(
+    #             "That User is already taken", code="existing_user"
+    #         )
+    #     except models.User.DoesNotExist:
+    #         return email
+
+    def save(self, *args, **kwargs):
+        mentor = super().save(commit=False)
