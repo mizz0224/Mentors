@@ -5,7 +5,7 @@
     {% endif %}
     {% if user.is_authenticated %}
         {% if user.is_mentor%}
-            <h2>hi menor!</h2>
+            <h2>hi mentor!</h2>
         {%else%}
             <li><a href="{% url "users:Mentorsignup" %}">Mentor Sign up</a></li>
         {%endif%}

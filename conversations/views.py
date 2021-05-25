@@ -8,8 +8,8 @@ from . import models, forms
 
 
 def go_conversation(requset, user_pk, mentor_pk):
-    user = user_models.User.objects.get_or_none(pk=user_pk)
-    mentor = user_models.Mentor.objects.get_or_none(pk=mentor_pk)
+    user = user_models.User.objects.get(pk=user_pk)
+    mentor = user_models.Mentor.objects.get(pk=mentor_pk)
     if user is not None and mentor is not None:
         try:
             conversation = models.Conversation.objects.get(Q(user=user) & Q(mentor=mentor))
@@ -24,7 +24,7 @@ class ConversationDetailView(View):
     
     def get(self, *args, **kwargs):
         pk = kwargs.get("pk")
-        conversation = models.Conversation.objects.get_or_none(pk=pk)
+        conversation = models.Conversation.objects.get(pk=pk)
         if not conversation:
             raise Http404()
         return render(self.request, "conversations/conversation_detail.html", {"conversation":conversation})
@@ -32,7 +32,7 @@ class ConversationDetailView(View):
     def post(self, *args, **kwargs):
         message = self.request.POST.get('message', None)
         pk = kwargs.get("pk")
-        conversation = models.Conversation.objects.get_or_none(pk=pk)
+        conversation = models.Conversation.objects.get(pk=pk)
         if not conversation:
             raise Http404()
         if message is not None:

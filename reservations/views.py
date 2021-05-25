@@ -24,9 +24,12 @@ def create(request, mentor, year, month, day):
         return redirect(reverse("core:home"))
     except models.BookedDay.DoesNotExist:
         user = request.user
-        check_reservation = models.Reservation.objects.filter(Q(user=user) and Q(mentor=mentor) and Q(check_in=date_obj))
-        print(check_reservation[0],"===================")
-        if len(check_reservation) < 1:
+        ckr = models.Reservation.objects.get_or_none(
+            user=user,
+            mentor=mentor,
+            check_in=date_obj,
+        )
+        if ckr is None:
             reservation = models.Reservation.objects.create(
                 user=request.user,
                 mentor=mentor,
@@ -34,12 +37,15 @@ def create(request, mentor, year, month, day):
                 check_out=date_obj,
             )
             return redirect(reverse("reservations:detail", kwargs={"pk": reservation.pk}))
-        return redirect(reverse("reservations:detail", kwargs={"pk": check_reservation[0].pk}))
+        return redirect(reverse("reservations:detail", kwargs={"pk": ckr.pk}))
 class ReservationDetailView(View):
     
     def get(self, *args, **kwargs):
         pk = kwargs.get("pk")
+        user = self.request.user
         reservation = models.Reservation.objects.get_or_none(pk=pk)
+        if reservation is None or (not (reservation.user == user or reservation.mentor.user == user)):
+            return redirect(reverse("core:home"))
         form = reviews_forms.CreateReviewForm()
         return render(self.request, "reservations/detail.html", {"reservation":reservation, "form":form})
 
