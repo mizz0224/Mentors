@@ -333,3 +333,11 @@ class MentorSignUpView(FormView):
 
 def renderkakaomap(request):
     return render(request, "users/kakaomap.html")
+
+class MentorListView(ListView):
+    """ MentorListView Definition """
+    model = models.Mentor
+    paginate_by = 10
+    paginate_orphans = 5
+    context_object_name = "Mentors"
+    template_name = 'users/mentor_list.html'

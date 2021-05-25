@@ -1,21 +1,63 @@
-{% load socialaccount %} 
+{% load socialaccount %}
+{% load static %}
 
-<div>
-    <a href="{% provider_login_url 'github' %}"> 
-        Continue with Github<br>
-    </a>
-    <a href="{% provider_login_url 'kakao' method='oauth2' %}">
-        Continue with Kakao<br>
-    </a>
+{% block page_title %}
+{% endblock page_title %}
+
+{% block content %}
+<section class="min-h-screen flex flex-col ">
     
-    <a href="{% provider_login_url 'google' %}">
-        Continue with Google<br>
-    </a>
-    <a href="{% provider_login_url 'facebook' %}">
-        Continue with Facebook<br>
-    </a>
-    <a href="{% provider_login_url 'naver' %}">
-        Continue with Naver
-    </a>
-
-</div>
+    <div class="flex flex-1 items-center justify-center">
+        <div class="rounded-lg sm:border-2 px-4 lg:px-24 py-16 lg:max-w-xl sm:max-w-md w-full text-center">
+            <form class="text-center">
+                <h1 class="font-bold tracking-wider text-3xl mb-8 w-full text-gray-600">
+                    Sign in
+                </h1>
+                <div class="py-2 text-left">
+                    <input type="email"
+                        class="bg-gray-200 border-2 border-gray-100 focus:outline-none bg-gray-100 block w-full py-2 px-4 rounded-lg focus:border-gray-700 "
+                        placeholder="Email" />
+                </div>
+                <div class="py-2 text-left">
+                    <input type="password"
+                        class="bg-gray-200 border-2 border-gray-100 focus:outline-none bg-gray-100 block w-full py-2 px-4 rounded-lg focus:border-gray-700 "
+                        placeholder="Password" />
+                </div>
+                <div class="py-2">
+                    <button type="submit"
+                        class="border-2 border-gray-100 focus:outline-none bg-purple-600 text-white font-bold tracking-wider block w-full p-2 rounded-lg focus:border-gray-700 hover:bg-purple-700">
+                        Sign In
+                    </button>
+                </div>
+            </form>
+            <div class="text-center">
+                <a href="#" class="hover:underline">Forgot password?</a>
+            </div>
+            <div class="text-center mt-12">
+                <span>
+                    Don't have an account?
+                </span>
+                <a href="{% url "users:signup" %}"
+                    class="font-light text-md text-indigo-600 underline font-semibold hover:text-indigo-800">Create
+                    One</a>
+            </div>
+            <hr>                   
+            <div>            
+                <a class="shadow-md m-2 h-full inline-block rounded-sm" href="{% provider_login_url 'kakao' method='oauth2' %}">
+                <img class= "inline-block"  src="{% static 'img/kakaoLogo.png' %}" alt="kakaoLogo" />                    
+                </a>
+                <a class="shadow-md m-2 h-full inline-block rounded-sm" href="{% provider_login_url 'google' %}">
+                    <img class= "inline-block" src="{% static 'img/googleLogo.png' %}" alt="GoogleLogo" />  
+                </a>
+                <a class="shadow-md m-2 h-full inline-block rounded-sm" href="{% provider_login_url 'facebook' %}">
+                    <img class= "inline-block" src="{% static 'img/FacebookLogo.png' %}" alt="FacebookLogo" />  
+                </a>
+                <a class="shadow-md m-2 h-full inline-block rounded-sm" href="{% provider_login_url 'naver' %}">
+                <img class= "inline-block" src="{% static 'img/naverLogo.png' %}" alt="NaverLogo" />                    
+                </a>
+            </div>
+        </div>
+    </div>
+   
+</section>
+{% endblock content %}

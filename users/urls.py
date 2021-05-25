@@ -47,4 +47,5 @@ urlpatterns = [
     path("search_mentor", views.search_mentor, name="search_mentor"),
     path("Mentorsignup/", views.MentorSignUpView.as_view(), name="Mentorsignup"),
     path("Mentorsignup/kakaomap", views.renderkakaomap),
+    path("Mentor-list/", views.MentorListView.as_view(), name="MentorList"),
 ]

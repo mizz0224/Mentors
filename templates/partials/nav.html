@@ -1,21 +1,29 @@
-<a href="{% url "core:home" %}">Mentors</a>
 <ul>
     {% if user.is_active %}
     <h2> Welcome, {{user.name}} </h2>
     {% endif %}
     {% if user.is_authenticated %}
-        {% if user.is_mentor%}
-            <h2>hi mentor!</h2>
-        {%else%}
-            <li><a href="{% url "users:Mentorsignup" %}">Mentor Sign up</a></li>
-        {%endif%}
-
-        <li class="nav_link"><a href="{% url 'wishlists:see-favs' %}">Favs({{user.wishlist.mentors.count}})</a></li>
-        <li class="nav_link"><a href="{% url 'reservations:list' %}">reservation_list({{user.reservations.count}})</a></li>
-        <li class="nav_link"><a href="{% url 'users:point' %}">My Point</a></li>
-        <li><a href="{% url "users:logout" %}">Log out</a></li>
+    <li class="nav_link"><a href="{% url 'wishlists:see-favs' %}">Favs({{user.wishlist.mentors.count}})</a></li>
+    <li class="nav_link"><a href="{% url 'reservations:list' %}">reservation_list({{user.reservations.count}})</a></li>
+        <li class = "ml-8"><a href="{% url "users:logout" %}">Log out</a></li>
     {% else %}
-        <li><a href="{% url "users:login" %}">Log in</a></li>
-        <li><a href="{% url "users:signup" %}">Sign up</a></li>
+    <header class="text-gray-600 body-font">
+  <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">   
+    <nav class="md:mr-auto md:ml-4 md:py-1 md:pl-4 md:border-l md:border-gray-400   flex flex-wrap items-center text-base justify-center">
+      <a class="mr-5 hover:text-gray-900">First Link</a>
+      <a class="mr-5 hover:text-gray-900">Second Link</a>
+      <a class="mr-5 hover:text-gray-900">Third Link</a>
+      <a class="mr-5 hover:text-gray-900">Fourth Link</a>
+    </nav>
+    {% block search-bar %}
+      <form method="get" action="" class="w-9/12">
+          <input class="search-box border px-5 w-full font-medium text-gray-900 placeholder-gray-600 py-3 rounded-sm w-64 shadow-md hover:shadow-lg focus:outline-none" name="Mentors" placeholder="Search By Mentors" />
+      </form>
+    {% endblock search-bar %}
+       <button type ="button" onclick='location.href="{% url "users:login" %}"' class="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0 ml-8">Login      
+    </button>
+  </div>
+</header>     
     {% endif %}
 </ul>
+
