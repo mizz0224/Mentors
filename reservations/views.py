@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect, reverse
 from users import models as user_models
 from reviews import forms as reviews_forms
+from django.db.models import Q
 from . import models
 
 # Create your views here.
@@ -22,27 +23,29 @@ def create(request, mentor, year, month, day):
         messages.error(request, "Can't Reserve That Mentor")
         return redirect(reverse("core:home"))
     except models.BookedDay.DoesNotExist:
-        reservation = models.Reservation.objects.create(
-            user=request.user,
-            mentor=mentor,
-            check_in=date_obj,
-            check_out=date_obj,
-        )
-        return redirect(reverse("reservations:detail", kwargs={"pk": reservation.pk}))
-    
+        user = request.user
+        check_reservation = models.Reservation.objects.filter(Q(user=user) and Q(mentor=mentor) and Q(check_in=date_obj))
+        print(check_reservation[0],"===================")
+        if len(check_reservation) < 1:
+            reservation = models.Reservation.objects.create(
+                user=request.user,
+                mentor=mentor,
+                check_in=date_obj,
+                check_out=date_obj,
+            )
+            return redirect(reverse("reservations:detail", kwargs={"pk": reservation.pk}))
+        return redirect(reverse("reservations:detail", kwargs={"pk": check_reservation[0].pk}))
 class ReservationDetailView(View):
     
     def get(self, *args, **kwargs):
         pk = kwargs.get("pk")
         reservation = models.Reservation.objects.get_or_none(pk=pk)
-        if not reservation or (reservation.user != self.request.user and reservation.Mentor != self.request.Mentor):
-            raise Http404()
         form = reviews_forms.CreateReviewForm()
         return render(self.request, "reservations/detail.html", {"reservation":reservation, "form":form})
 
 def edit_reservation(request, pk, verb):
     reservation = models.Reservation.objects.get_or_none(pk=pk)
-    if not reservation or (reservation.user != request.user and reservation.Mentor != request.Mentor):
+    if not reservation or (reservation.user != request.user):
        raise Http404()
     if verb == "confirm":
         reservation.status = models.Reservation.STATUS_CONFIRMED
