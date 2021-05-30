@@ -14,6 +14,8 @@ class CustomUserAdmin(UserAdmin):
                     "birthdate",
                     "gender",
                     "point",
+                    "image",
+                    "is_mentor"
                 )
             },
         ),
@@ -34,7 +36,6 @@ class MentorAdmin(admin.ModelAdmin):
                     "is_authorized",
                     "is_supermento",
                     "user",
-                    "point",
                 )
             },
         ),

@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load socialaccount %}
+{% load static %}
 
 {% block page_title %}
     Log In
@@ -8,12 +10,48 @@
 {% endblock search-bar %}
 
 {% block content %}
-     
-    {% include 'partials/social_login.html' %}
-
-    <form method="POST" action="{% url "users:login" %}">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button>Login</button>
-    </form>
+    <section class="min-h-screen flex flex-col ">
+    <div class="flex flex-1 items-center justify-center">
+        <div class="rounded-lg sm:border-2 px-4 lg:px-24 py-16 lg:max-w-xl sm:max-w-md w-full text-center">
+            <form class="text-center" method="POST" action="{% url "users:login" %}">
+                <h1 class="font-bold tracking-wider text-3xl mb-8 w-full text-gray-600">
+                    Log in
+                </h1>
+                {% csrf_token %}
+                {% for f in form %}
+                {{f}} 
+                {% endfor %}
+                <div class="py-2">
+                    <button type="submit" class="border-2 border-gray-100 focus:outline-none bg-purple-600 text-white font-bold tracking-wider block w-full p-2 rounded-lg focus:border-gray-700 hover:bg-purple-700">
+                        Log In
+                    </button>
+                </div>
+            </form>
+            <div class="text-center mt-12">
+                <span>
+                    Don't have an account?
+                </span>
+                <a href="{% url "users:signup" %}"
+                    class="font-light text-md text-indigo-600 underline font-semibold hover:text-indigo-800">Create
+                    One</a>
+            </div>
+            <hr class="m-2">                   
+            <div>            
+                <a class="shadow-md m-2 h-full inline-block rounded-sm" href="{% provider_login_url 'kakao' method='oauth2' %}">
+                <img class= "inline-block"  src="{% static 'img/kakaoLogo.png' %}" alt="kakaoLogo" />                    
+                </a>
+                <a class="shadow-md m-2 h-full inline-block rounded-sm" href="{% provider_login_url 'google' %}">
+                    <img class= "inline-block" src="{% static 'img/googleLogo.png' %}" alt="GoogleLogo" />  
+                </a>
+                <a class="shadow-md m-2 h-full inline-block rounded-sm" href="{% provider_login_url 'facebook' %}">
+                    <img class= "inline-block" src="{% static 'img/FacebookLogo.png' %}" alt="FacebookLogo" />  
+                </a>
+                <a class="shadow-md m-2 h-full inline-block rounded-sm" href="{% provider_login_url 'naver' %}">
+                <img class= "inline-block" src="{% static 'img/naverLogo.png' %}" alt="NaverLogo" />                    
+                </a>
+            </div>
+        </div>
+    </div>
+   
+</section>
 {% endblock content %}

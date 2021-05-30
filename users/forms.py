@@ -5,9 +5,25 @@ from . import models
 
 class LoginForm(forms.Form):  # login form
 
-    email = forms.EmailField()
-    password = forms.CharField(widget=forms.PasswordInput)
-
+    email = forms.CharField(
+        required = True,
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Email", 
+                "class": "bg-gray-200 border-2 border-gray-100 focus:outline-none bg-gray-100 block w-full py-2 px-4 rounded-lg focus:border-gray-700 my-2"
+            }
+        )
+    )
+    
+    password = forms.CharField(
+        required = True,
+        widget=forms.PasswordInput(
+            attrs={
+                "placeholder": "Password", 
+                "class": "bg-gray-200 border-2 border-gray-100 focus:outline-none bg-gray-100 block w-full py-2 px-4 rounded-lg focus:border-gray-700 my-2"
+            }
+        )
+    )
     def clean(self):
         email = self.cleaned_data.get("email")
         password = self.cleaned_data.get("password")
@@ -28,6 +44,7 @@ class SignUpForm(forms.ModelForm):  # 일반 signup form , forms.modelform 상�
             "email",
             "name",
             "birthdate",
+            "image",
             "gender",
             "phone_number",
         ]
@@ -43,7 +60,6 @@ class SignUpForm(forms.ModelForm):  # 일반 signup form , forms.modelform 상�
         widget=forms.PasswordInput(attrs={"placeholder": "Confirmed Password"})
     )
     auth_number = forms.IntegerField()
-
     def clean_email(self):  # 이메일이 있는지 확인하는소스
         email = self.cleaned_data.get("email")
         try:

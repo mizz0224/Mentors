@@ -67,7 +67,7 @@ class User(AbstractUser):
         (LOGIN_KAKAO, "Kakao"),
     )
 
-    # image = models.ImageField(upload_to=) # 업로드 폴더 지정 후 사용할 예정
+    image = models.ImageField(upload_to="images", blank=True, null=True) # 업로드 폴더 지정 후 사용할 예정
     name = models.CharField(max_length=10, blank=True)
     birthdate = models.DateField(
         auto_now=False, blank=True, null=True
@@ -112,7 +112,7 @@ class User(AbstractUser):
         return self.name
 
 
-class Mentor(models.Model):
+class Mentor(core_models.TimeStampedModel):
     user = models.ForeignKey(
         "users.User", related_name="mentor", on_delete=models.CASCADE
     )
@@ -144,9 +144,10 @@ class Mentor(models.Model):
         if len(all_reviews) > 0:
             for review in all_reviews:
                 if review.review != "삭제된 메시지입니다":
-                    all_ratings += review.rating_average()
+                    all_ratings += review.score
                     cnt += 1
-            return round(all_ratings / cnt, 2)
+            if all_ratings != 0:
+                return round(all_ratings / cnt, 2)
         return 0
 
     def get_calendars(self):

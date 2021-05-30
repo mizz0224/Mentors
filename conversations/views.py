@@ -1,7 +1,7 @@
 from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import render, redirect, reverse
-from django.views.generic import View
+from django.views.generic import View, ListView
 from users import models as user_models
 from . import models, forms
 # Create your views here.
@@ -43,3 +43,12 @@ class ConversationDetailView(View):
             )
         return redirect(reverse("conversations:detail", kwargs={'pk':pk}))
         
+class MessageListView(ListView):
+    model = models.Message
+    context_object_name = "Messages"
+    template_name = "conversations/message_list.html"
+    ordering = "created"
+    
+    def get_queryset(self):
+        pk = self.kwargs.get("pk")
+        return models.Message.objects.filter(conversation_id=pk).order_by("created")

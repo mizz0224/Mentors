@@ -1,29 +1,35 @@
-<ul>
-    {% if user.is_active %}
-    <h2> Welcome, {{user.name}} </h2>
-    {% endif %}
-    {% if user.is_authenticated %}
-    <li class="nav_link"><a href="{% url 'wishlists:see-favs' %}">Favs({{user.wishlist.mentors.count}})</a></li>
-    <li class="nav_link"><a href="{% url 'reservations:list' %}">reservation_list({{user.reservations.count}})</a></li>
-        <li class = "ml-8"><a href="{% url "users:logout" %}">Log out</a></li>
-    {% else %}
-    <header class="text-gray-600 body-font">
-  <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">   
+{% load static %}
+<header class="container max-w-full flex items-center justify-between px-6 h-20 border-b border-gray-400">
+    <a class="w-40" href="{% url "core:home" %}">
+      <div class="w-full h-16 bg-cover bg-center" style="background-image:url({% static "img/Logo.jfif" %})"></div>
+    </a>
     <nav class="md:mr-auto md:ml-4 md:py-1 md:pl-4 md:border-l md:border-gray-400   flex flex-wrap items-center text-base justify-center">
-      <a class="mr-5 hover:text-gray-900">First Link</a>
-      <a class="mr-5 hover:text-gray-900">Second Link</a>
-      <a class="mr-5 hover:text-gray-900">Third Link</a>
-      <a class="mr-5 hover:text-gray-900">Fourth Link</a>
+      <a class="mr-5 hover:text-gray-900" href="{% url 'users:MentorList' %}">Mentor List</a>
+      {% if user.is_authenticated %}
+        <a class="mr-5 hover:text-gray-900" href="{% url 'wishlists:see-favs' %}">Favs</a>
+        <a class="mr-5 hover:text-gray-900" href="{% url 'reservations:list' %}">reservation_list</a>
+        {% if user.is_mentor == false %}
+          <a class="mr-5 hover:text-gray-900" href="{% url 'users:Mentorsignup' %}">Mentorsignup</a>
+        {% endif %}
+        {% if user.is_superuser %}
+          <a class="mr-5 hover:text-gray-900" href="{% url 'users:manage' %}">Mentor manage</a>
+        {% endif %}
+      {% endif %}
     </nav>
-    {% block search-bar %}
-      <form method="get" action="" class="w-9/12">
-          <input class="search-box border px-5 w-full font-medium text-gray-900 placeholder-gray-600 py-3 rounded-sm w-64 shadow-md hover:shadow-lg focus:outline-none" name="Mentors" placeholder="Search By Mentors" />
-      </form>
-    {% endblock search-bar %}
-       <button type ="button" onclick='location.href="{% url "users:login" %}"' class="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0 ml-8">Login      
+    <form method="get" action="" class="w-5/12">
+        <input class="search-box border px-5 font-medium text-gray-900 placeholder-gray-600 py-3 rounded-sm w-full shadow-md hover:shadow-lg focus:outline-none" name="Mentors" placeholder="Search By Mentors" />
+    </form>
+    {% if user.is_authenticated %}
+    <button type ="button" 
+        onclick='location.href = "{% url "users:logout" %}"' 
+        class="items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-center h-12 w-20 text-base mt-2 md:mt-0 ml-5">
+        Logout
     </button>
-  </div>
-</header>     
+    {% else %}
+    <button type ="button" 
+        onclick='location.href = "{% url "users:login" %}"' 
+        class="items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-center h-12 w-20 text-base mt-2 md:mt-0 ml-5">
+        Login
+    </button>
     {% endif %}
-</ul>
-
+</header>

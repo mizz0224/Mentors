@@ -8,9 +8,7 @@
 {% endblock search-bar %}
 
 {% block content %}
-
-    {% include 'partials/social_login.html' %}
-    <form method="POST" action="{% url "users:signup" %}"> 
+    <form method="POST" enctype="multipart/form-data" action="{% url "users:signup" %}"> 
         {% csrf_token %}
         {{form.as_p}}
         <button id="Sign_up" type="submit"><i class="fa fa-search">회원가입</i></button>

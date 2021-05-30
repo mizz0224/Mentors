@@ -3,6 +3,7 @@ from django.utils import translation
 from django.http import HttpResponse, JsonResponse
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import PasswordChangeView
 from django.views.generic import (
     FormView,
@@ -341,3 +342,50 @@ class MentorListView(ListView):
     paginate_orphans = 5
     context_object_name = "Mentors"
     template_name = 'users/mentor_list.html'
+    
+    def get_queryset(self):
+        return models.Mentor.objects.filter(is_authorized=True)
+    
+    
+class ManageUserView(ListView):
+    
+    model = models.User
+    template_name = "users/manage_users.html"
+    paginate_by = 10
+    paginate_orphans = 5
+    ordering = "-created"
+    context_object_name = "Mentors"
+    
+    def get_queryset(self):
+        search = self.request.GET.get("search")
+        if search:
+            return models.Mentor.objects.filter(user__is_superuser=False).filter(user__name__contains=search).order_by("-created")
+        
+        checked = self.request.GET.get("checked")
+        if checked:
+            if checked == "true":
+                return models.Mentor.objects.filter(user__is_superuser=False).filter(is_authorized=True).order_by("-created")
+            else:
+                return models.Mentor.objects.filter(user__is_superuser=False).filter(is_authorized=False).order_by("-created")
+        else:
+            return models.Mentor.objects.filter(user__is_superuser=False).order_by("created")
+        
+@login_required
+def manage_user(request):
+    if request.user.is_superuser: # 관리자 여부
+        try:
+            user_pk = request.POST.getlist("user_pk")
+            Mentor_pk = request.POST.getlist("mentor_pk")
+            checkedbox = request.POST.getlist("checkedbox")
+            for pk in Mentor_pk:
+                Mentor = models.Mentor.objects.get(pk=pk)
+                if pk in checkedbox:
+                    Mentor.is_authorized = True
+                else:
+                    Mentor.is_authorized = False
+                Mentor.save()
+        except:
+            pass
+        return redirect(reverse("users:manage"))
+    else:
+        return redirect(reverse("core:home"))

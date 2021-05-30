@@ -51,8 +51,8 @@ class ReservationDetailView(View):
 
 def edit_reservation(request, pk, verb):
     reservation = models.Reservation.objects.get_or_none(pk=pk)
-    if not reservation or (reservation.user != request.user):
-       raise Http404()
+    # if reservation is None or (reservation.user != request.user or reservation.mentor.user != request.user):
+    #    raise Http404()
     if verb == "confirm":
         reservation.status = models.Reservation.STATUS_CONFIRMED
     elif verb == "cancel":
@@ -70,6 +70,11 @@ class ReservationListView(ListView):
     context_object_name = "reservations"
     
     def get_queryset(self):
+        
         user = self.request.user
-        qs = models.Reservation.objects.filter(user=user)
+        
+        if user.is_mentor:
+            qs = models.Reservation.objects.filter(mentor__user=user)
+        else:
+            qs = models.Reservation.objects.filter(user=user)
         return qs

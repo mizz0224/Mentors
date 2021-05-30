@@ -15,11 +15,5 @@ class Review(core_models.TimeStampedModel):
     def mentorname(self):
         return self.mentor.user.name
     
-    def rating_average(self):
-        avg = self.score
-        return round(avg, 2)
-    
-    rating_average.short_description = "Avg."
-    
     class Meta:
         ordering = ("-created",)
