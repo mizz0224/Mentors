@@ -1,0 +1,65 @@
+{% extends "base.html" %} 
+{% block page_title %} {{users.name}} {% endblock page_title %}
+{% comment %} 유저의 프로필 {% endcomment %}
+{% block content %} 
+       
+    
+    {% comment %} <div class="flex flex-col h-32 w-32 bg-cover bg-center" style="background-image: url({{users.image.url}})"></div>  {% endcomment %}
+    
+    <section class="text-gray-700 body-font">
+    <div class="container px-5 py-24 mx-auto flex flex-col justify-center items-center">   
+    
+    <div class="lg:w-2/3 md:w-1/2 bg-gray-300 rounded-lg overflow-hidden px-10 pt-10 pb-8 shadow-md">
+        
+        <div class="bg-white relative flex flex-wrap py-6 rounded-md">
+
+            <div class="w-full lg:w-1/2 px-6 mt-4 lg:mt-0 lg:border-r-2">
+                <h2 class="profile_title title-font">
+                    <i class="fas fa-user"></i>
+                    NAME
+                </h2>
+                <p class="profile_content">{{users.name}}</p>
+
+                <h2 class="profile_title title-font mt-4">
+                    <i class="fas fa-graduation-cap"></i>
+                    Birthdate
+                </h2>
+                <a class="profile_content">{{users.birthdate}}</a>
+
+                <h2 class="profile_title title-font mt-4">
+                    <i class="fas fa-id-card"></i>
+                    Gender
+                </h2>
+                <a class="profile_content">{{users.gender}}</a>
+            
+            </div>
+            
+            <div class="w-full lg:w-1/2 px-6 mt-4 lg:mt-0">
+                <h2 class="profile_title title-font">
+                    <i class="fas fa-envelope"></i>
+                    EMAIL
+                </h2>
+                <a class="text-indigo-500 profile_content">{{users.email}}</a>
+
+                <h2 class="profile_title title-font mt-4">
+                    <i class="fas fa-phone"></i>
+                    PHONE
+                </h2>
+                <p class="profile_content">{{users.phone_number}}</p>                
+            </div>
+        </div>
+        <div class="mt-4 w-full flex justify-between items-center">            
+            {% if request.user == user %}
+            <a href="{% url 'users:update'%}" class="duration-300 text-indigo-500 font-semibold rounded-md py-2 px-4 hover:text-white hover:bg-indigo-500 hover:shadow-md">
+                <i class="fas fa-edit mr-2"></i>유저 업데이트
+            </a>
+                {% if users.is_mentor %}
+                    <a href="{% url 'users:mentor-profile' pk=users.mentor.first.pk %}" class="duration-300 text-indigo-500 font-semibold rounded-md py-2 px-4 hover:text-white hover:bg-indigo-500 hover:shadow-md">멘토 프로필</a>
+                {% endif%}
+            {% endif %}
+        </div>    
+    
+    </div>   
+</div>
+</section>
+{% endblock content %}

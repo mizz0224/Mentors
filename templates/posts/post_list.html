@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+
+{% block page_title %}
+Home
+{% endblock page_title %}
+
+{% block content %}
+{% if not mentors %}
+<h1>검색 결과가 없습니다</h1>
+{%else%}
+<h3>Searched Mentor</h3>
+{% for Mentor in mentors %}
+<li><a href = "Mentor/{{Mentor.pk}}">{{Mentor.user.name}}</a></li>
+{% endfor %}
+{%endif%}
+{% endblock content %}

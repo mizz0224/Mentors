@@ -1,0 +1,116 @@
+{% load static %}
+{% comment %} <header class="container max-w-full flex items-center justify-between h-20 border-b border-gray-400"> {% endcomment %}
+<div class="flex w-full z-30 fixed">
+  <div @click.away="open = false"
+    class="flex flex-col md:flex-row w-full text-gray-700 bg-white flex-shrink-0 shadow-md border rounded-b-lg"
+    x-data="{ open: false }">
+    <div class="flex-shrink-0 px-8 py-2 flex flex-row items-center justify-between">
+
+      <a href="{% url 'core:home' %}">
+        <img class="w-32 h-24 py-8 pt-6 pb-4 bg-cover bg-center" src="{% static 'img/logo1.png' %}" />
+      </a>
+
+      <button
+        class="rounded-lg md:hidden focus:outline-none focus:shadow-outline h-12 w-12 flex justify-center items-center"
+        @click="open = !open">
+        <svg fill="currentColor" viewBox="0 0 20 20" class="w-8 h-8">
+          <path x-show="!open" fill-rule="evenodd"
+            d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM9 15a1 1 0 011-1h6a1 1 0 110 2h-6a1 1 0 01-1-1z"
+            clip-rule="evenodd"></path>
+          <path x-show="open" fill-rule="evenodd"
+            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+            clip-rule="evenodd"></path>
+        </svg>
+      </button>
+
+    </div>
+
+    <nav :class="{'block': open, 'hidden': !open}"
+      class="flex-grow px-4 md:px-0 md:pr-4 pb-4 md:pb-0 md:flex md:flex-row md:justify-between md:items-center">
+      {% comment %} 줄였을때 서치바부분 {% endcomment %}
+      {% comment %} <form id="search" method="GET" action="{% url 'lectures:lists' %}" class="w-full flex md:hidden">
+        <div class="flex flex-row px-4 py-2 mt-2 text-sm font-semibold text-gray-600 bg-gray-200 rounded-lg w-full">
+          <input class="bg-gray-200 focus:outline-none flex-1" placeholder="Search Lecture" type="text" name="search">
+          <button
+            class="flex items-center justify-center text-sm font-semibold bg-gray-300 h-6 px-2 rounded-full ml-auto focus:outline-none">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </form> {% endcomment %}
+      <div class="relative md:flex md:flex-row md:items-center z-10 md:border-l-2 md:pl-4 md:space-x-2">
+        <!-- Mentor List -->
+        <a href="{% url 'users:MentorList' %}"
+          class="duration-300 w-full flex px-4 py-2 mt-2 md:mt-0 text-sm font-semibold text-left rounded-lg hover:text-indigo-500 hover:bg-gray-200">
+          <span class="uppercase">Mentors</span>
+        </a>
+        <!-- Mentor List -->
+        {% if user.is_authenticated %}        
+        <!-- Favs -->
+          <a href="{% url 'wishlists:see-favs' %}"
+            class="duration-300 w-full flex px-4 py-2 mt-2 md:mt-0 text-sm font-semibold text-left rounded-lg hover:text-indigo-500 hover:bg-gray-200">
+            <span class="uppercase">Favs</span>
+          </a>
+        <!-- Favs -->
+
+        <!-- Reservation -->
+          <a href="{% url 'reservations:list' %}"
+            class="duration-300 w-full flex px-4 py-2 mt-2 md:mt-0 text-sm font-semibold text-left rounded-lg hover:text-indigo-500 hover:bg-gray-200">
+            <span class="uppercase">Reservation</span>
+          </a>
+        <!-- Reservation -->
+
+        <!-- UserProfile -->        
+          <a href="{% url 'users:profile' user.pk %}"
+            class="duration-300 w-full flex px-4 py-2 mt-2 md:mt-0 text-sm font-semibold text-left rounded-lg hover:text-indigo-500 hover:bg-gray-200">
+            <span class="uppercase">Profile</span>
+          </a>        
+        <!-- Mentorsignup -->        
+        {% if user.is_mentor %}
+        {% else%}
+        <a href="{% url 'users:Mentorsignup' %}"
+          class="duration-300 w-full flex px-4 py-2 mt-2 md:mt-0 text-sm font-semibold text-left rounded-lg hover:text-indigo-500 hover:bg-gray-200">
+          <span class="uppercase">Mentorsignup</span>
+        </a>
+        {% endif%}
+        {% endif %}
+
+        <!-- Mentor manage -->
+        {% if user.is_authenticated and user.is_superuser %}
+        <a href="{% url 'users:manage' %}"
+          class="duration-300 w-full flex px-4 py-2 mt-2 md:mt-0 text-sm font-semibold text-left rounded-lg hover:text-indigo-500 hover:bg-gray-200">
+          <span class="uppercase">Mentor manage</span>
+        </a>
+        {% endif %}
+        <!-- Admin -->
+      </div>
+      <input></input>
+      <button>dd</button>
+      <!--Login, Logout-->
+      <div class="relative md:ml-10 md:w-32 z-0">
+        {% if user.is_authenticated %}
+        <a href="{% url 'users:logout' %}"
+          class="mt-2 md:mt-0 bg-red-500 shadow-md text-white flex justify-center duration-300 uppercase px-4 py-2 text-sm font-semibold bg-transparent rounded-lg hover:bg-red-700 focus:bg-red-700 focus:outline-none focus:shadow-outline">
+          <svg fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
+            stroke="currentColor" class="h-5 w-5">
+            <path d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z">
+            </path>
+          </svg>
+          <span class="ml-2">Logout</span>
+        </a>
+        {% else %}
+        <a href="{% url 'users:login' %}"
+          class="mt-2 md:mt-0 bg-green-500 shadow-md text-white flex justify-center duration-300 uppercase px-4 py-2 text-sm font-semibold bg-transparent rounded-lg hover:bg-green-700 focus:bg-green-700 focus:outline-none focus:shadow-outline">
+          <svg fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
+            stroke="currentColor" class="h-5 w-5">
+            <path d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z">
+            </path>
+          </svg>
+          <span class="ml-2">Login</span>
+        </a>
+        {% endif %}
+      </div>
+      <!--Login, Logout-->
+    </nav>
+  </div>
+</div>
+{% comment %} </header> {% endcomment %}

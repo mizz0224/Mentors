@@ -1,0 +1,35 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block page_title %} Home {% endblock page_title %}
+{% block content %} 
+<div class="min-h-75vh">
+    <h3 class="mb-12 mt-12 text-4xl text-center">Mentor List</h3>
+    <div>
+    <div class="container mx-auto pb-10">
+        <div class="flex flex-wrap mx-25 mb-10">
+    {% for Mentor in Mentors %} 
+        {% comment %} {% if Mentor.user.image %}
+            <div class="flex flex-col h-32 w-32 bg-cover bg-center" style="background-image: url({{Mentor.user.image.url}})"></div>    
+        {% endif %} {% endcomment %}
+            {% comment %} {% include 'mixins/mentor_card.html' with mentor=mentor.user %} {% endcomment %}
+            <div class="xl:w-1/4 md:w-1/2 p-4">
+                <div class="bg-gray-100 p-6 rounded-lg">
+                    {% if Mentor.user.image  %}
+                <img class="mx-auto h-40 rounded  object-cover object-center mb-6"
+                        src="{{Mentor.user.image.url}}" alt="content">
+                {% else %}                
+                <img class="h-40 rounded w-full object-cover object-center mb-6"
+                    src="{% static 'img/no.png' %}" alt="content">
+                {% endif %}
+                    <h3 class="tracking-widest text-indigo-500 text-xs font-medium title-font">#{{Mentor.main_branch}}&nbsp;#{{Mentor.sub_branch.get_name}}</h3>
+                    <h2 class="text-lg text-gray-900 font-medium title-font mb-4"><a href = "/users/Mentor/{{Mentor.pk}}/"><b>{{Mentor.user.name}}</b></a></h2>                    
+                    <p class="leading-relaxed text-base">Fingerstache flexitarian street art 8-bit waistcoat. Distillery
+                        hexagon
+                        disrupt edison bulbche.</p>
+                </div>
+            </div>
+    {% endfor %}
+    </div>
+    </div>
+</div>
+{% endblock content %}

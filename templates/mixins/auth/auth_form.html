@@ -1,0 +1,17 @@
+<form method="POST" class ="">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+            <span class="text-red-700 font-medium text-sm">{{error}}</span>
+        {% endfor %}
+    {% endif %}
+    {% for field in form %}
+        {% include 'mixins/auth/form_input.html' with field=field %}
+    {% endfor %}
+    {% if object.login_method == "email" %}
+        <div class="inline-block mt-5">
+            <a href="{% url 'users:password' %}" ><p class="btn text-white bg-green-500 rounded-lg p-2" >Change Password </p></a>
+        </div>
+    {% endif %}
+    <button class="mt-5 btn rounded-lg p-2 bg-red-500 text-white">{{cta}}</button>
+</form>

@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css?after">
+  <link rel="stylesheet" href="{% static "css/styles.css" %}">
+  <link rel="stylesheet" href="{% static "css/style.css" %}">
+  <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
+  <title>{% block page_title %}{% endblock page_title %}Mentors</title>
+</head>
+
+<body class = "flex-col min-h-full ">
+<div class ="wrap">
+  {% include "partials/nav.html" %}
+  <div class = "SAM4">
+  {% block content %}{% endblock content %}
+  </div>
+  {% include "partials/footer.html" %}
+</div>
+</body>
+
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" class="relative min-h-full m-0 display-none">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+    <link rel="stylesheet" , href="{% static "css/styles.css" %}">
+</head>
+
+<body>
+<div id="bodyContents" class="flex flex-col h-screen py-2">
+    {% for message in Messages  %}
+        <div class="mb-10 {% if message.user.pk == user.pk %} self-end text-right {% endif %}">
+            <span class="text-sm font-medium text-gray-600">{{message.user.first_name}}</span>
+            <div class="mt-px p-5 w-56 rounded {% if message.user.pk != user.pk %}bg-teal-500 text-white{% else %}bg-gray-300{% endif %}">
+                {{message.message}}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+</body>
+
+</html>
+
+<script>
+setTimeout(function() {
+    acyncMovePage(document.location.href);
+}, 1000);
+</script>
+
+<script>
+    function acyncMovePage(url){
+        // ajax option
+        var ajaxOption = {
+                url : url,
+                async : true,
+                type : "GET",
+                dataType : "html",
+                cache : false
+        };
+
+        $.ajax(ajaxOption).done(function(data){
+            // Contents 영역 삭제
+            $('#bodyContents').children().remove();
+            // Contents 영역 교체
+            $('#bodyContents').html(data);
+        });
+    }
+</script>

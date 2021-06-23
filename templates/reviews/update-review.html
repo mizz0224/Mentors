@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block page_title %}
+    Update Review
+{% endblock page_title %}
+
+{% block search-bar %}
+{% endblock search-bar %}
+
+{% block content %}
+
+<form method="POST" class="w-full" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+            <span class="text-red-700 font-medium text-sm">{{error}}</span>
+        {% endfor %}
+    {% endif %}
+    {% for field in form %}
+    
+        <div class="input w-full {% if field.errors %}has_error{% endif %}">
+            {{field}}
+        {% if field.errors %}
+            {% for error in field.errors %}
+                <span class="text-red-700 font-medium text-sm">{{error}}</span>
+            {% endfor %}
+        {% endif %}
+        </div>
+
+    {% endfor %}
+    <button class="btn bg-red-500 text-white">Change Review</button>
+</form>
+
+{% endblock content %}
+

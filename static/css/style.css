@@ -1,0 +1,65 @@
+.pointtable{
+    text-align: center;
+}
+.td1{
+    width : 20%;
+}
+.td2{
+    width : 30%;
+}
+.td3{
+    width : 30%;
+}
+.td4{
+    width : 20%;
+}
+.SAM{
+    line-height: 88px;
+}
+.cancelbtn{
+    height: 50%;
+}
+.SAM2{
+    line-height: 56px;
+}
+.tlqkf{
+    cursor: pointer;
+}
+.authx{
+    display: none;
+}
+.SAM3{
+    color : gray;
+}
+.wrkxek {
+    position:absolute;
+    bottom:0;
+    width: 100%;
+    border-top: 0.5px solid #dbdbdb;
+}
+.SAM4{
+    padding-top: 125px;
+}
+.wrap{
+    min-height: 100%;
+    position : relative;
+    padding-bottom: 150px;
+}
+* {
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+html {
+    height: 100%;
+    }
+    body {
+    margin: 0;
+    height: 100%;
+}
+.maph{
+    height: 320px;
+}
+.btn{
+    line-height: inherit;
+}
