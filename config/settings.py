@@ -25,7 +25,7 @@ SECRET_KEY = "igvw9!mc_*oh&3(4*($6xf6sshil5&oqz8#7s!d268tkuoy8^%"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["gomentorgo.shop"]
+ALLOWED_HOSTS = ["gomentorgo.shop", "localhost"]
 
 
 # Application definition

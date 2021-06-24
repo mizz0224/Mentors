@@ -134,3 +134,11 @@ node_modules/
 !.elasticbeanstalk/*.global.yml
 
 node_modules/
+
+conversations/migrations/*
+core/migrations/*
+posts/migrations/*
+reservations/migrations/*
+users/migrations/*
+reviews/migrations/*
+wishlists/migrations/*
