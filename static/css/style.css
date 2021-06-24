@@ -63,3 +63,12 @@ html {
 .btn{
     line-height: inherit;
 }
+.writere{
+    border: 2px solid black;    
+}
+.rhdqor{
+    display:block;
+    overflow: hidden; 
+    text-overflow: ellipsis;
+    white-space: nowrap; 
+}

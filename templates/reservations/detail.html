@@ -32,26 +32,29 @@
                 </div>
             </div>
             <div class="h-24 py-5 px-5 w-full text-right">
-                {% if reservation.status != 'canceled' %}
-                    {% if reservation.status == 'confirmed' %}
-                        {% if request.user.is_mentor == False %}
-                            <span class="font-medium text-2xl text-center w-full block mb-5">Write your review</span>
-                            <form action="{% url 'reviews:create' reservation.mentor.pk %}" method="POST" class="w-1/2 mx-auto">
-                                {% csrf_token %}
-                                {{form}}
-                                <button class="btn-link mt-5">Submit Review</button>
-                            </form>
-                        {% endif %}
-                    {% else %}
-                        {% if reservation.status == 'pending' %}
-                        {% if reservation.mentor.user == user %}
-                                <a href="{% url 'reservations:edit' reservation.pk 'confirm' %}" class="SAM2 bg-green-500 btn-link p-5 text-white rounded-xl px-3 mb-5">Confirm Reservation</a>
-                            {% endif %}
-                            <a href="{% url 'reservations:edit' reservation.pk 'cancel' %}" class="SAM2 bg-red-500 btn-link p-5 text-white rounded-xl text-right">Cancel Reservation</a>
-                        {% endif %}
-                    {% endif %}
+            {% if reservation.status == 'pending' %}
+                {% if reservation.mentor.user == user %}
+                    <a href="{% url 'reservations:edit' reservation.pk 'confirm' %}" class="SAM2 bg-green-500 btn-link p-5 text-white rounded-xl px-3 mb-5">Confirm Reservation</a>
                 {% endif %}
-            </div>
+                <a href="{% url 'reservations:edit' reservation.pk 'cancel' %}" class="SAM2 bg-red-500 btn-link p-5 text-white rounded-xl text-right">Cancel Reservation</a>
+            {% endif %}
+            </div>            
         </div>
+        {% if request.user.is_mentor == False %}
+        <div class="leading-loose max-w-xl m-4 p-10 bg-white rounded shadow-xl my-4 mx-auto">
+            {% if reservation.status != 'canceled' %}
+                {% if reservation.status == 'confirmed' %}                        
+                    <span class="font-medium text-2xl text-center w-full block mb-5">Write your review</span>
+                    <form action="{% url 'reviews:create' reservation.mentor.pk %}" method="POST" class="w-full mx-auto">
+                        {% csrf_token %}
+                        {{form}}
+                        <div class ="text-center">
+                            <button class="btn-link h-12 text-white w-32 mt-5 bg-green-500 rounded-lg">Submit Review</button>
+                        </div>
+                    </form>
+                {% endif %}                            
+            {% endif %}
+        </div>
+        {% endif %}
     </div>
 {% endblock content %}
