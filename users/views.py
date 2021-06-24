@@ -419,3 +419,66 @@ def manage_user(request):
         return redirect(reverse("users:manage"))
     else:
         return redirect(reverse("core:home"))
+    
+class KakaoLoginTest(View):
+    def get(self, request):
+        REST_API_KEY = '21d002f9794143bd76e3fa58aab3af30'
+        REDIRECT_URI = 'http://gomentorgo.shop/users/kakao/login/callback/'
+        API_HOST = f'https://kauth.kakao.com/oauth/authorize?response_type=code&client_id={REST_API_KEY}&redirect_uri={REDIRECT_URI}'
+        return redirect(API_HOST)
+class KakaoException(Exception):
+    pass    
+def kakao_callback(request):
+    try:
+        code = request.GET.get("code")
+        client_id = "21d002f9794143bd76e3fa58aab3af30"
+        redirect_uri = "http://gomentorgo.shop/users/kakao/login/callback/"
+        token_request = requests.get(
+            f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={client_id}&redirect_uri={redirect_uri}&code={code}"
+        )
+        token_json = token_request.json()
+        error = token_json.get("error", None)
+        if error is not None:
+            print("tokenerror")
+            raise KakaoException()
+        access_token = token_json.get("access_token")
+        profile_request = requests.get(
+            "https://kapi.kakao.com/v2/user/me",
+            headers={"Authorization": f"Bearer {access_token}"},
+        )
+        profile_json = profile_request.json()
+        get_email = profile_json.get("kakao_account").get("email")
+        if get_email is None:
+            print("emailerror")
+            raise KakaoException
+        try:
+            user = models.User.objects.get(email=get_email)
+            login(request, user, backend="django.contrib.auth.backends.ModelBackend")
+            return redirect(reverse("core:home"))
+        except models.User.DoesNotExist:
+            return redirect(reverse("users:kakaosignup"))
+        
+    except KakaoException:
+        return redirect(reverse("core:home"))
+class KakaoSignUpView(FormView):  # 일반 회원가입 function 니꼬 소스 참조
+
+    template_name = "users/signup_kakao.html"
+    form_class = forms.kakaoSignUpForm
+    success_url = reverse_lazy("core:home")
+
+    def form_valid(self, form):
+        form.save()
+        email = form.cleaned_data.get("email")
+        password = "adfdalksjflqj"
+        user = authenticate(
+            self.request,
+            username=email,
+            password=password,
+        )
+        user.set_unusable_password();
+        if user is not None:
+            login(
+                self.request, user, backend="django.contrib.auth.backends.ModelBackend"
+            )
+        user.verify_email()
+        return super().form_valid(form)   

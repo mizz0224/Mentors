@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, reverse
 from django.views.generic import TemplateView
+from django.core.paginator import Paginator
 from users import models as user_models
 from . import models
 # Create your views here.
@@ -17,3 +18,4 @@ def toggle_mentor(request, mentor_pk):
 
 class SeeFavsView(TemplateView):
     template_name="wishlists/wishlist_detail.html"
+    paginate_by = 10

@@ -37,7 +37,7 @@
             </div>
             <hr class="m-2">                   
             <div>            
-                <a class="shadow-md m-2 h-full inline-block rounded-sm" href="{% provider_login_url 'kakao' method='oauth2' %}">
+                <a class="shadow-md m-2 h-full inline-block rounded-sm" href="{% url "users:kakaologin" %}">
                 <img class= "inline-block"  src="{% static 'img/kakaoLogo.png' %}" alt="kakaoLogo" />                    
                 </a>
                 <a class="shadow-md m-2 h-full inline-block rounded-sm" href="{% provider_login_url 'google' %}">

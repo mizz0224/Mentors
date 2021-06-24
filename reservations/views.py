@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect, reverse
 from users import models as user_models
 from reviews import forms as reviews_forms
+from django.core.paginator import Paginator
 from django.db.models import Q
 from . import models
 
@@ -75,8 +76,6 @@ class ReservationListView(ListView):
         
         if user.is_mentor:
             qs = models.Reservation.objects.filter(mentor__user=user)
-            print("12321342413431313231")
         else:
             qs = models.Reservation.objects.filter(user=user)
-            print("qdqwdqwdddddddddddddddddddddddddddddddddddddd")
         return qs

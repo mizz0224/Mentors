@@ -50,4 +50,7 @@ urlpatterns = [
     path("Mentor-list/", views.MentorListView.as_view(), name="MentorList"),
     path("manage/", views.ManageUserView.as_view(), name="manage"),
     path("manage/submit", views.manage_user, name="submit"),
+    path("kakao/login/callback/", views.kakao_callback, name="kakao-callback"),
+    path("kakao/signup", views.KakaoSignUpView.as_view(), name="kakaosignup"),
+    path("kakaologin",views.KakaoLoginTest.as_view(), name = "kakaologin"),
 ]

@@ -300,3 +300,91 @@ class MentorsignupForm(forms.ModelForm):
 
     def save(self, *args, **kwargs):
         mentor = super().save(commit=False)
+        
+class kakaoSignUpForm(forms.ModelForm):  # 일반 signup form , forms.modelform 상속,
+    auth_number = forms.IntegerField(
+        widget=forms.NumberInput(
+            attrs={
+                "placeholder": "인증번호",
+                "class": "w-full px-5 py-1 text-gray-700 bg-gray-200 rounded",
+            }
+        )
+    )
+
+    class Meta:  # forms.Form 상속과는 다르게 forms.ModelForm 은 Meta class 와
+        model = models.User  # model,
+        fields = [  # fields 선언 해줘야 사용가능 model 내에 있더라도 field 선언안해주면 입력 form 생성불가
+            "email",
+            "name",
+            "birthdate",
+            "image",
+            "gender",
+            "phone_number",
+        ]
+        widgets = {  # widget 명시 가능
+            # "birthdate": forms.SelectDateWidget,
+            "name": forms.TextInput(
+                attrs={
+                    "placeholder": "이름",
+                    "class": "w-full px-5 py-1 text-gray-700 bg-gray-200 rounded",
+                }
+            ),
+            "email": forms.EmailInput(
+                attrs={
+                    "placeholder": "이메일",
+                    "class": "w-full px-5 py-1 text-gray-700 bg-gray-200 rounded",
+                }
+            ),
+            "birthdate": forms.DateInput(
+                attrs={
+                    "placeholder": "생년월일",
+                    "class": "w-full px-5  py-1 text-gray-700 bg-gray-200 rounded",
+                }
+            ),
+            "image": forms.FileInput(
+                attrs={
+                    "placeholder": "프로필 이미지",
+                    "class": "w-full px-2 py-1 text-gray-700 bg-gray-200 rounded",
+                }
+            ),
+            "gender": forms.Select(
+                attrs={
+                    "placeholder": "성별",
+                    "class": "w-full px-5 py-1 text-gray-700 bg-gray-200 rounded",
+                }
+            ),
+            "phone_number": forms.NumberInput(
+                attrs={
+                    "placeholder": "번호",
+                    "class": "w-full px-5 py-1 text-gray-700 bg-gray-200 rounded",
+                }
+            ),
+        }
+        fields = (
+            "email",
+            "name",
+            "birthdate",
+            "image",
+            "gender",
+            "phone_number",
+            "auth_number",
+        )
+
+    def clean_email(self):  # 이메일이 있는지 확인하는소스
+        email = self.cleaned_data.get("email")
+        try:
+            models.User.objects.get(email=email)
+            raise forms.ValidationError(
+                "That email is already taken", code="existing_user"
+            )
+        except models.User.DoesNotExist:
+            return email
+
+    def save(self, *args, **kwargs):
+        user = super().save(commit=False)
+        email = self.cleaned_data.get("email")
+        password = "adfdalksjflqj"
+        user.username = email
+        user.is_mentor = False
+        user.set_password(password)
+        user.save()
