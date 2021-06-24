@@ -31,20 +31,17 @@ def create(request, mentor, year, month, day):
             check_in=date_obj,
         )
         if ckr is None:
-            if user.point >= 20:
-                user.point = user.point - 20
-                mentor.user.point = mentor.user.point + 20
-                reservation = models.Reservation.objects.create(
-                    user=request.user,
-                    mentor=mentor,
-                    check_in=date_obj,
-                    check_out=date_obj,
-                )
-                user.save()
-                mentor.save()
-                return redirect(reverse("reservations:detail", kwargs={"pk": reservation.pk}))
-            else:
-                return redirect(reverse("users:detail", kwargs={"pk":request.user.mentor.first().pk}))
+            user.point = user.point - 20
+            mentor.user.point = mentor.user.point + 20
+            user.save()
+            mentor.user.save()
+            reservation = models.Reservation.objects.create(
+                user=user,
+                mentor=mentor,
+                check_in=date_obj,
+                check_out=date_obj,
+            )
+            return redirect(reverse("reservations:detail", kwargs={"pk": reservation.pk}))
         return redirect(reverse("reservations:detail", kwargs={"pk": ckr.pk}))
 class ReservationDetailView(View):
     
@@ -66,7 +63,12 @@ def edit_reservation(request, pk, verb):
         reservation.is_confirmed = True
     elif verb == "cancel":
         reservation.status = models.Reservation.STATUS_CANCELED
-        models.BookedDay.objects.filter(reservation=reservation).delete()
+        user = request.user
+        mentor = reservation.mentor
+        user.point = user.point + 20
+        mentor.user.point = mentor.user.point - 20
+        user.save()
+        mentor.user.save()
     reservation.save()
     messages.success(request, "Reservation Updated")
     return redirect(reverse("reservations:detail", kwargs={"pk": reservation.pk}))

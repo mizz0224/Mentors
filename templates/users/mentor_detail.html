@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load is_booked on_favs %}
 
+
 {% block page_title %} {{Mentor.name}} {% endblock page_title %}
 {% block content %}
 {% if user.is_authenticated %}
@@ -97,19 +98,20 @@
             </div>
             <div class="grid grid-cols-7 gap-5">
                 {% for day in calendar.get_days %}
-                {% is_booked Mentor day as is_booked_bool %}
-                {% if day.number != 0 %}
-                {% if day.past %}
-                <span class="rounded bg-gray-200 w-full text-center p-1 text-gray-300">{{day}}</span>
-                {% elif is_booked_bool %}
-                <span class="rounded bg-gray-200 w-full text-center p-1 text-gray-300 line-through">{{day}}</span>
-                {% else %}
+                    {% is_booked request.user day as is_booked_bool %}
+                    {% if day.number != 0 %}
+                    {% if day.past %}
+                    <span class="rounded bg-gray-200 w-full text-center p-1 text-gray-300">{{day}}</span>
+                    {% elif is_booked_bool %}
                     <a href="{% url 'reservations:create' Mentor.pk day.year day.month day.number %}"
-                    class="bg-gray-200 w-full text-center rounded text-gray-700 p-1 hover:bg-teal-400 hover:font-medium hover:text-white cursor-pointer">{{day}}</a>
-                {% endif %}
-                {% else %}
-                <span></span>
-                {% endif %}
+                        class="bg-gray-200 w-full text-center rounded text-indigo-300 p-1 hover:bg-teal-400 hover:font-medium hover:text-white cursor-pointer line-through">{{day}}</a>
+                    {% else %}
+                        <a href="{% url 'reservations:create' Mentor.pk day.year day.month day.number %}"
+                        class="bg-gray-200 w-full text-center rounded text-gray-700 p-1 hover:bg-teal-400 hover:font-medium hover:text-white cursor-pointer" onclick="checkPoint()">{{day}}</a>
+                    {% endif %}
+                    {% else %}
+                    <span></span>
+                    {% endif %}
                 {% endfor %}
             </div>
         </div>
@@ -161,5 +163,21 @@ geocoder.addressSearch(address, function(result, status) {
         map.setCenter(coords);
     } 
 });    
+</script>
+
+<script>
+function checkPoint(){
+    var point = "{{request.user.point}}"
+    if(point < 20){
+        alert("포인트가 부족합니다.\n현재 포인트 : " + point);
+        event.preventDefault();
+        return;
+    }
+
+    if(!confirm("예약하시겠습니까?\n포인트 : " + point + " → " + (parseInt(point) - 20).toString() )){
+        event.preventDefault();
+        return; 
+    }
+}
 </script>
 {% endblock content %}

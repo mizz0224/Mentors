@@ -1,16 +1,18 @@
 import datetime
 from django import template
 from reservations import models as reservation_models
+from users import models as users_models
 
 register = template.Library()
 
 @register.simple_tag
-def is_booked(mentor, day):
+def is_booked(user, day):
     if day.number == 0:
         return 
     try:
+        # user = users_models.User.objects.get(pk=user_pk)
         date = datetime.datetime(year=day.year, month=day.month, day=day.number)
-        reservation_models.BookedDay.objects.get(day=date, reservation__mentor=mentor)
+        reservation = reservation_models.Reservation.objects.get(check_in=date, user=user)
         return True
-    except reservation_models.BookedDay.DoesNotExist:
+    except reservation_models.Reservation.DoesNotExist:
         return False

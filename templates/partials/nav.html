@@ -83,8 +83,11 @@
         {% endif %}
         <!-- Admin -->
       </div>
-      <input></input>
-      <button>dd</button>
+      <form class="form-inline my-2 my-lg-0" action="{% url 'core:search_mentor' %}" method="post">
+        {% csrf_token %}
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="name" value="{{name}}">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
       <!--Login, Logout-->
       <div class="relative md:ml-10 md:w-32 z-0">
         {% if user.is_authenticated %}

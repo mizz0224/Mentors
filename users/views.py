@@ -306,27 +306,6 @@ class UserPointView(TemplateView):
     template_name = "users/point.html"
 
 
-def search_mentor(request):
-    # get_name = request.GET.get("name")
-    get_name = request.POST.get("name")
-    # 안에 변수는 짧게하는게 좋음
-    obj = (
-        models.Mentor.objects.filter(user__name__icontains=get_name)
-        | models.Mentor.objects.filter(main_branch__name__icontains=get_name)
-        | models.Mentor.objects.filter(sub_branch__name__icontains=get_name)
-    )
-    # 포함관계설정
-    # obj = models.Mentor.objects.all()
-    # return redirect(reverse())
-    if get_name:
-        return render(
-            request, "posts/post_list.html", {"mentors": obj, "get_name": get_name}
-        )
-    else:
-        return render(request, "posts/post_list.html")
-    # pass
-
-
 class MentorSignUpView(FormView):
     template_name = "users/Mentorsignup.html"
     form_class = forms.MentorsignupForm
