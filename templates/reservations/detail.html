@@ -33,8 +33,8 @@
             </div>
             <div class="h-24 py-5 px-5 w-full text-right">
                 {% if reservation.status != 'canceled' %}
-                    {% if reservation.status == 'confirmed' and reservation.is_finished %}
-                        {% if request.user.is_mentor == false %}
+                    {% if reservation.status == 'confirmed' %}
+                        {% if request.user.is_mentor == False %}
                             <span class="font-medium text-2xl text-center w-full block mb-5">Write your review</span>
                             <form action="{% url 'reviews:create' reservation.mentor.pk %}" method="POST" class="w-1/2 mx-auto">
                                 {% csrf_token %}

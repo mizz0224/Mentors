@@ -211,7 +211,7 @@ class UpdateProfileView(mixins.LoggedInOnlyView, SuccessMessageMixin, UpdateView
 
 class UpdateMentorProfileView(mixins.LoggedInOnlyView, SuccessMessageMixin, UpdateView):
     model = models.Mentor
-    template_name = "users/update_Mentor_profile.html"
+    template_name = "users/update_mentor_profile.html"
     fields = (        
         "main_branch",
         "sub_branch",
