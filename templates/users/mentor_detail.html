@@ -7,16 +7,26 @@
 {% if user.is_authenticated %}
 <div class="container mx-auto flex justify-around pb-30">
     <div class="w-1/2">
-        <div class="flex justify-between">
+        <div class="flex justify-between items-center">
+
             <div class="mb-5">
                 <h4 class="text-3xl font-medium mb-px">{{Mentor.user.name}}</h4>
+                
             </div>
+            {% on_favs Mentor as on_favs_boolean %}
+                {% if on_favs_boolean %}
+                <a class="block mb-5 w-1/3 text-teal-600 font-bold"
+                    href="{% url 'wishlists:toggle-mentor' Mentor.pk %}?action=remove">Remove from Favorite</a>
+                {% else %}
+                <a class="block mb-5 w-1/3 text-teal-600 font-bold"
+                    href="{% url 'wishlists:toggle-mentor' Mentor.pk %}?action=add">Save to Favorite</a>
+                {% endif %}      
             {% comment %} 멘토의 프로필로 가게 a태그 {% endcomment %}
             {% comment %} <a href="{{room.host.get_absolute_url}}" class="flex flex-col items-center">
                 {% include "mixins/user_avatar.html" with user=room.host %}
                 <span class="mt-2 text-gray-500">{{room.host.first_name}}</span>
             </a> {% endcomment %}
-        </div>
+        </div> 
         <div class="flex border-section">
             <span class="mr-5 font-light">{{Mentor.main_branch}}</span>
             <span class="mr-5 font-light">{{Mentor.sub_branch.get_name}}</span>
@@ -26,10 +36,9 @@
         <p class="border-b border-gray-400 pb-8 mt-8">
             {{room.description}}
         </p>
-        <div class="border-b border-gray-400 pb-8 mt-8">
+        <div class="crstyle border-b border-gray-400 pb-8 mt-8">
             <h4 id="amenities" class="font-medium text-lg mb-5">Career</h4>
             <li class="mb-2">{{Mentor.career}}</li>
-            
         </div>
 
         {% comment %} 지도 썅려나 {% endcomment %}
@@ -41,15 +50,7 @@
         </div>
         <div class="mt-10">
             <h4 class="font-medium text-2xl mb-5">Reviews</h4>
-            <div class="flex items-center">
-                {% on_favs Mentor as on_favs_boolean %}
-                {% if on_favs_boolean %}
-                <a class="block mb-10 w-1/3 text-teal-600 font-bold"
-                    href="{% url 'wishlists:toggle-mentor' Mentor.pk %}?action=remove">Remove from Favorite</a>
-                {% else %}
-                <a class="block mb-10 w-1/3 text-teal-600 font-bold"
-                    href="{% url 'wishlists:toggle-mentor' Mentor.pk %}?action=add">Save to Favorite</a>
-                {% endif %}            
+            <div class="flex items-center">    
                 <div>
                     <i class="fas fa-star text-teal-500"></i>
                     <span class="font-bold text-xl">{{Mentor.total_rating}}</span>
@@ -60,30 +61,44 @@
                     <span>review{{Mentor.reviews.count|pluralize}}</span>
                 </div>              
             </div>
-            <div class="mt-10">
-                {% for review in Mentor.reviews.all %}
-                    <br>
-                    <div class=border-section>
-                        <div class="mb-3 flex">
-                            <div class="flex flex-col ml-5">
-                                <span>{{review.user.name}} / {{review.created|date:"F Y"}}</span>
-                                {% if review.review != "삭제된 메시지입니다" %}
-                                <span>{{review.score}}</span>
-                                {% endif %}
-                            </div>
+            <br>
+             <div class="bg-white dark:bg-gray-800 w-full rounded-lg p-4 mb-6 shadow sm:inline-block">
+                <div class="flex items-start text-left">
+                    {% for review in Mentor.reviews.all %}
+                    <div class="ml-6">
+                        <p class="flex items-baseline">
+                            <span class="text-gray-600 dark:text-gray-200 font-bold">
+                                {{review.user.name}}
+                            </span>
+                            <span class="text-gray-500 dark:text-gray-300  ml-2 text-sm">
+                                {{review.created|date:"F Y"}}
+                            </span>
+                        </p>
+                        {% if review.review != "삭제된 메시지입니다" %}
+                        <div class="flex items-center mt-1">
+                            <i class="fas fa-star text-teal-500"></i>
+                            {{review.score}}
                         </div>
-                        {% if review.review == "삭제된 메시지입니다" %}
-                        <p><del>{{review.review}}</del>
-                        <p>
-                            {% else %}
-                        <p>{{review.review}}</p>
-                        <a href="{% url 'reviews:update' pk=review.pk %}">update review</a>
-                        <a href="{% url 'reviews:remove' pk=review.pk %}">remove review</a>
                         {% endif %}
+
+                        <div class="mt-3">
+                            <p class="rhdqor mt-1 max-w-xs dark:text-white">
+                                {% if review.review == "삭제된 메시지입니다" %}
+                            <p><del>{{review.review}}</del>
+                            <p>
+                                {% else %}
+                            <p>{{review.review}}</p>
+                            <div class = "mt-4 h-8">
+                                <a class = "bg-green-500 rounded-lg text-white" href="{% url 'reviews:update' pk=review.pk %}">update</a>
+                                <a class = "bg-red-500 rounded-lg text-white" href="{% url 'reviews:remove' pk=review.pk %}">remove</a>
+                            </div>
+                            {% endif %}
+                            </p>
+                        </div>
                     </div>
-                    <br>
                     {% endfor %}
                 </div>
+            </div>
         </div>
     </div>
     <div class="w-1/3">

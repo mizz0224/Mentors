@@ -38,8 +38,8 @@ class Update_review(UpdateView):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class=form_class)
-        form.fields['score'].widget.attrs ={'placeholder': "score"}
-        form.fields['review'].widget.attrs ={'placeholder': "review"}
+        form.fields['score'].widget.attrs ={"label" :"Score",'placeholder': "score", 'class' :"w-full px-5 py-1 text-gray-700 bg-gray-200 rounded" }
+        form.fields['review'].widget.attrs ={"label" :"Review",'placeholder': "review", 'class' :"w-full px-5 py-1 text-gray-700 bg-gray-200 rounded"  }
         return form
     
     def get_success_url(self):
